@@ -123,13 +123,5 @@ beads.forEach(bead => {
         //update gap position
         gapPosition[currentColumnIndex] = clickedBeadIndex;
         // showBeadPos();
-        //update counter 
-        let currentCounter = counterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
-        currentCounter.textContent = clickedBeadIndex;
-        if (clickedBeadIndex == 10) {
-            currentCounter.classList.add("error-animation");
-        } else {
-            currentCounter.classList.remove("error-animation");
-        }
     });
 });
