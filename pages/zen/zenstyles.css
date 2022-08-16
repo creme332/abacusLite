@@ -1,5 +1,89 @@
-.box{
-    height: 100px;
-    width: 100px;
-    background-color: black;
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@600&display=swap');
+
+body{
+    height: 100vh;;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.img-container{
+  display: flex;
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  top:0;
+  right:0;
+}
+.abacus{
+    display: flex;
+    flex-direction: column;
+    /* outline:5px solid blue; */
+}
+.abacus-bar{
+  height: 15px;
+  border-radius: 10px;
+  width: auto;
+  background-color: rgb(200, 152, 89);
+  /* box-shadow: 0px 5px 3px rgb(99, 74, 42); */
+}
+.column-container{
+    display: flex;
+}
+.column{
+    position: relative;
+    /* outline:1px solid black; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.counter-container{
+    margin-top: 10px;
+    height: auto;
+    display: flex;
+    /* outline: 1px solid; */
+}
+.counter{
+    display: flex   ;
+    justify-content: center;
+    align-items: center;
+    outline: 1px solid;
+    font-size: 30px;
+    font-family: 'IBM Plex Sans Hebrew', sans-serif;
+    background-color: transparent;
+}
+
+.error-animation{
+    animation: blinker 1s linear infinite;
+    color: red;
+    outline: 2px solid;
+}
+
+@keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+}
+
+.bead{
+    position: relative;
+    border-radius: 50%;
+    text-align: center;
+    font-size: large;
+    color: white;
+    box-shadow: inset -3px -2px 3px rgba(0,0,0,.5);
+    transition: .5s ease-in-out;
+}
+
+.stick{
+    position: absolute;
+    width: 7px;
+    border-radius: 5px;;
+    /* outline:1px solid blue; */
+    background-color: rgb(132, 132, 132);
+    box-shadow: inset -3px 1px 1px rgba(0,0,0,.5);
+    z-index:-1; /*place stick behind beads*/
 }
