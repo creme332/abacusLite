@@ -24,3 +24,8 @@ resource| owner
 - [ ] Add project social media preview.
 
 ### ✔ Done
+
+# 🐛 Bugs
+Bug | How to reproduce | Cause
+---|---|---|
+Create more than 1 gap in a single column by merging beads| While bead A is moving up, quickly click on bead B to cause bead B to move down. Both A and  B will merge. ![](assets/beadglitch.gif)| Unknown
