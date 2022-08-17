@@ -25,7 +25,7 @@ function buildNumGrid(){
         cell1.className = "counter";
         cell1.textContent= "0";
         cell1.contentEditable="true";
-        cell1.style.backgroundColor = topBeadsColors[i % topBeadsColors.length];
+        cell1.style.backgroundColor = "black";
 
         //create cell for num2
         let cell2 = document.createElement("div");
@@ -167,11 +167,11 @@ const submitbtn =  document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".counter");
 
 function shiftGap(columnDiv, newGapPosition){
+
     //shifts the gap in a specific column to a new position
     let currentColumnIndex = getColumnIndex(columnDiv); //left-most column has index 0
     let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
     let currentColumnBeads = columnDiv.querySelectorAll(".bead"); //all beads in current column
-
 
     //loop through each bead in current column and move it if needed
     currentColumnBeads.forEach(cbead => {
@@ -196,15 +196,30 @@ function shiftGap(columnDiv, newGapPosition){
     //update gap position
     gapPosition[currentColumnIndex] = newGapPosition;
 
+    //update counter for current column
+    let currentCounter = counterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
+    currentCounter.textContent = newGapPosition;
+
 }
 
-document.addEventListener("keydown",e=>{
-    if(e.code=="Enter"){
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function AutoFillAbacus(event){
+    //autofill abacus with values in num1 grid.
+    if(event.code=="Enter"){
+        //reset abacus
+
+        //move beads
         for(let columnIndex=num1Cells.length-1;columnIndex>-1;columnIndex--){
+            num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
             let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
             if(k==0)continue;
             newGapPosition = gapPosition[columnIndex] + k;
             shiftGap(columnsArray[columnIndex], newGapPosition);
+            await sleep(1000);
         }
     }
-});
+}
+document.addEventListener("keydown", AutoFillAbacus);
