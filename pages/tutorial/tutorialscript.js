@@ -18,20 +18,20 @@ counterContainer.className = "counter-container";
 const num1 = document.querySelector(".num1");
 const num2 = document.querySelector(".num2");
 
-function buildNumGrid(){
-    for(let i=0;i<numberOfColumns;i++){
+function buildNumGrid() {
+    for (let i = 0; i < numberOfColumns; i++) {
         //create cell for num1
         let cell1 = document.createElement("div");
         cell1.className = "counter";
-        cell1.textContent= "0";
-        cell1.contentEditable="true";
+        cell1.textContent = "0";
+        cell1.contentEditable = "true";
         cell1.style.backgroundColor = "black";
 
         //create cell for num2
         let cell2 = document.createElement("div");
         cell2.className = "counter";
-        cell2.textContent= "0";
-        cell2.contentEditable="true";
+        cell2.textContent = "0";
+        cell2.contentEditable = "true";
         cell2.style.backgroundColor = "black";
 
         num1.appendChild(cell1);
@@ -40,9 +40,9 @@ function buildNumGrid(){
 }
 function buildAbacus() {
     const topBar = document.createElement("div");
-    topBar.className ="abacus-bar";
+    topBar.className = "abacus-bar";
     const bottomBar = document.createElement("div");
-    bottomBar.className ="abacus-bar";
+    bottomBar.className = "abacus-bar";
     abacus.appendChild(topBar);
 
     for (let i = 0; i < numberOfColumns; i++) {
@@ -79,7 +79,7 @@ function buildAbacus() {
             bead.className = "bead";
             bead.style.height = beadSize + "px";
             bead.style.width = beadSize + "px";
-            bead.style.top="0px";
+            bead.style.top = "0px";
             bead.style.backgroundColor = topBeadsColors[i % topBeadsColors.length];
             column.appendChild(bead);
         }
@@ -153,22 +153,23 @@ beads.forEach(bead => {
         currentCounter.textContent = clickedBeadIndex;
 
         //show animation if counter shows 10
-        if (clickedBeadIndex == 10) {
-            currentCounter.classList.add("error-animation");
-        } else {
-            currentCounter.classList.remove("error-animation");
-        }
+        // if (clickedBeadIndex == 10) {
+        //     currentCounter.classList.add("error-animation");
+        // } else {
+        //     currentCounter.classList.remove("error-animation");
+        // }
     });
 });
 
 //implement abacus auto-fill
-const columnsArray =  columnContainer.querySelectorAll(".column");
-const submitbtn =  document.querySelector(".submitbtn");
+const columnsArray = columnContainer.querySelectorAll(".column");
+const submitbtn = document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".counter");
 
-function shiftGap(columnDiv, newGapPosition){
-
+function shiftGap(columnDiv, newGapPosition) {
     //shifts the gap in a specific column to a new position
+    //returns true if at least 1 bead changed position
+    let AbacusChanged = false;
     let currentColumnIndex = getColumnIndex(columnDiv); //left-most column has index 0
     let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
     let currentColumnBeads = columnDiv.querySelectorAll(".bead"); //all beads in current column
@@ -183,12 +184,14 @@ function shiftGap(columnDiv, newGapPosition){
             if (cbeadPos > ColumnGapIndex && cbeadPos <= newGapPosition) { //current bead is below gap and above clicked bead
                 currentY -= beadSize; // move beadSize units upwards
                 cbead.style.top = currentY.toString() + "px";
+                AbacusChanged = true;
             }
 
         } else { //must displace beads downwards
             if (cbeadPos < ColumnGapIndex && cbeadPos >= newGapPosition) { //current bead is above gap and below clicked bead
                 currentY += beadSize; // move beadSize units downwards
                 cbead.style.top = currentY.toString() + "px";
+                AbacusChanged = true;
             }
         }
     });
@@ -200,26 +203,49 @@ function shiftGap(columnDiv, newGapPosition){
     let currentCounter = counterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
     currentCounter.textContent = newGapPosition;
 
+    return AbacusChanged;
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+function resetAbacus() {
+    //place gap at top in each column
+    //returns true if there was a change in abacus
+    let AbacusChanged = false;
+    columnsArray.forEach(column => {
+        let k = shiftGap(column, 0);
+        if(k==true)AbacusChanged=true;
+    });
+    return AbacusChanged;
+}
+function doSomething(event) {
+    if (event.code == "Enter") {
+        //reset color of num1 cells
 
-async function AutoFillAbacus(event){
-    //autofill abacus with values in num1 grid.
-    if(event.code=="Enter"){
         //reset abacus
-
-        //move beads
-        for(let columnIndex=num1Cells.length-1;columnIndex>-1;columnIndex--){
-            num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
-            let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
-            if(k==0)continue;
-            newGapPosition = gapPosition[columnIndex] + k;
-            shiftGap(columnsArray[columnIndex], newGapPosition);
-            await sleep(1000);
+        let AbacusChanged = resetAbacus();
+        if(AbacusChanged){
+            //wait for bead transitions to be over 
+            abacus.addEventListener("transitionend",e=>{
+                AutoFillAbacus();
+                console.log("Abacus transition Over");
+            }, {once:true});
+        }else{
+            AutoFillAbacus();
         }
     }
 }
-document.addEventListener("keydown", AutoFillAbacus);
+async function AutoFillAbacus() {
+    //autofill abacus with values in num1 grid.
+    //move beads
+    for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
+        num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
+        let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
+        // if (k == 0) continue;
+        newGapPosition = gapPosition[columnIndex] + k;
+        shiftGap(columnsArray[columnIndex], newGapPosition);
+        await sleep(1000);
+    }
+}
+document.addEventListener("keydown", doSomething);
