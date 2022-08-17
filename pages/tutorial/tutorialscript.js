@@ -220,7 +220,7 @@ function resetAbacus() {
     });
     return AbacusChanged;
 }
-function doSomething(event) {
+function AutoFillAbacus(event) {
     if (event.code == "Enter") {
         //reset color of num1 cells
         num1Cells.forEach(cell => {
@@ -231,18 +231,22 @@ function doSomething(event) {
         if (AbacusChanged) {
             //wait for bead transitions to be over 
             abacus.addEventListener("transitionend", e => {
-                AutoFillAbacus();
+                AnimateAutoFillAbacus();
                 console.log("Abacus transition Over");
             }, { once: true });
         } else { //abacus is already in default state
-            AutoFillAbacus();
+            AnimateAutoFillAbacus();
         }
     }
 }
-async function AutoFillAbacus() {
+async function AnimateAutoFillAbacus() {
     //autofill abacus with values in num1 grid.
-    
-    //move beads
+
+    //ignore other keydown events
+    document.removeEventListener("keydown", AutoFillAbacus);
+
+
+    //move beads in each cplmn
     for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
         num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
         let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
@@ -251,5 +255,8 @@ async function AutoFillAbacus() {
         shiftGap(columnsArray[columnIndex], newGapPosition);
         await sleep(1000);
     }
+
+    //ignore other keydown events
+    document.addEventListener("keydown", AutoFillAbacus);
 }
-document.addEventListener("keydown", doSomething);
+document.addEventListener("keydown", AutoFillAbacus);
