@@ -5,6 +5,7 @@ const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
 const topBeadsColors = ["green", "red", "#F9629F", "blue", "orange"];
+const DEFAULT_CELL_COLOR = "black";
 let gapPosition = []; //gap position in each column. 
 
 // create a container to store each column in abacus
@@ -25,14 +26,14 @@ function buildNumGrid() {
         cell1.className = "counter";
         cell1.textContent = "0";
         cell1.contentEditable = "true";
-        cell1.style.backgroundColor = "black";
+        cell1.style.backgroundColor = DEFAULT_CELL_COLOR;
 
         //create cell for num2
         let cell2 = document.createElement("div");
         cell2.className = "counter";
         cell2.textContent = "0";
         cell2.contentEditable = "true";
-        cell2.style.backgroundColor = "black";
+        cell2.style.backgroundColor = DEFAULT_CELL_COLOR;
 
         num1.appendChild(cell1);
         num2.appendChild(cell2);
@@ -215,29 +216,32 @@ function resetAbacus() {
     let AbacusChanged = false;
     columnsArray.forEach(column => {
         let k = shiftGap(column, 0);
-        if(k==true)AbacusChanged=true;
+        if (k == true) AbacusChanged = true;
     });
     return AbacusChanged;
 }
 function doSomething(event) {
     if (event.code == "Enter") {
         //reset color of num1 cells
-
+        num1Cells.forEach(cell => {
+            cell.style.backgroundColor = DEFAULT_CELL_COLOR;
+        });
         //reset abacus
         let AbacusChanged = resetAbacus();
-        if(AbacusChanged){
+        if (AbacusChanged) {
             //wait for bead transitions to be over 
-            abacus.addEventListener("transitionend",e=>{
+            abacus.addEventListener("transitionend", e => {
                 AutoFillAbacus();
                 console.log("Abacus transition Over");
-            }, {once:true});
-        }else{
+            }, { once: true });
+        } else { //abacus is already in default state
             AutoFillAbacus();
         }
     }
 }
 async function AutoFillAbacus() {
     //autofill abacus with values in num1 grid.
+    
     //move beads
     for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
         num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
