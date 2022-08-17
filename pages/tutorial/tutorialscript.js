@@ -238,13 +238,14 @@ function UserFillAbacus(e) {
     let clickedBead = e.target;
     let clickedColumn = clickedBead.parentNode; //column containing clicked bead
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
-
+    let clickedColumnIndex = getColumnIndex(clickedColumn);
+    let oldGapPos = gapPosition[clickedColumnIndex];
     shiftGap(clickedColumn, clickedBeadIndex);
 
     //when user is done with 1 click, re-enable eventlisteners
     abacus.addEventListener("transitionend", e => {
         beads.forEach(bead => {
-            if(clickedBeadIndex==currentNum2Digit)shiftColumnInNum2();
+            if(clickedBeadIndex==currentNum2Digit+oldGapPos)shiftColumnInNum2();
             bead.addEventListener("click", UserFillAbacus);
         });
     }, { once: true });
@@ -269,7 +270,7 @@ async function AnimateAutoFillAbacus() {
 
     // show first instruction
     shiftColumnInNum2();
-    
+
     //re-allow user to click beads
     beads.forEach(bead => {
         bead.addEventListener("click", UserFillAbacus);
