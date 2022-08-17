@@ -194,6 +194,7 @@ beads.forEach(bead => {
 const columnsArray = columnContainer.querySelectorAll(".column");
 const submitbtn = document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".counter");
+const num2Cells = num2.querySelectorAll(".counter");
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -208,30 +209,38 @@ function resetAbacus() {
     });
     return AbacusChanged;
 }
-function AutoFillAbacus(event) {
+function EnableComputerAssistance(event) {
     if (event.code == "Enter") {
+        //ignore other keydown events
+        document.removeEventListener("keydown", EnableComputerAssistance);
+
+        beads.forEach(bead => {
+            bead.removeEventListener("click", UserFillAbacus);
+        });
         //reset color of num1 cells
         num1Cells.forEach(cell => {
             cell.style.backgroundColor = DEFAULT_CELL_COLOR;
         });
         //reset abacus
-        let AbacusChanged = resetAbacus();
+        let AbacusChanged = resetAbacus(); 
         if (AbacusChanged) {
             //wait for bead transitions to be over 
             abacus.addEventListener("transitionend", e => {
                 AnimateAutoFillAbacus();
-                console.log("Abacus transition Over");
             }, { once: true });
         } else { //abacus is already in default state
             AnimateAutoFillAbacus();
         }
+
+        //when auto-fill is over, generate instructions
+        animateInstructions();
     }
+}
+function animateInstructions(){
+    num2Cells.forEach(c=>{console.log(c.textContent)});
 }
 async function AnimateAutoFillAbacus() {
     //autofill abacus with values in num1 grid.
-
-    //ignore other keydown events
-    document.removeEventListener("keydown", AutoFillAbacus);
 
     //move beads in each column
     for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
@@ -240,10 +249,17 @@ async function AnimateAutoFillAbacus() {
         // if (k == 0) continue;
         newGapPosition = gapPosition[columnIndex] + k;
         shiftGap(columnsArray[columnIndex], newGapPosition);
-        await sleep(1000);
+        await sleep(1000); //sleep between columns transition
     }
 
-    //ignore other keydown events
-    document.addEventListener("keydown", AutoFillAbacus);
+    //autofill is over at this point
+
+    //re-allow user to call computerAssitance
+    document.addEventListener("keydown", EnableComputerAssistance);
+
+    //re-allow user to click beads
+    beads.forEach(bead => {
+        bead.addEventListener("click", UserFillAbacus);
+    });
 }
-document.addEventListener("keydown", AutoFillAbacus);
+document.addEventListener("keydown", EnableComputerAssistance);
