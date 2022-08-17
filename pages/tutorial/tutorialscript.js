@@ -116,57 +116,6 @@ function getColumnIndex(column) {
     return columnIndex;
 }
 
-//displace beads onclick
-beads.forEach(bead => {
-    bead.addEventListener("click", e => {
-        let clickedBead = e.target;
-        let clickedColumn = clickedBead.parentNode; //column containing clicked bead
-        let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
-        let currentColumnIndex = getColumnIndex(clickedColumn); //left-most column has index 0
-        let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
-        let currentColumnBeads = clickedColumn.querySelectorAll(".bead"); //all beads in current column
-
-        //loop through each bead in current column and move it if needed
-        currentColumnBeads.forEach(cbead => {
-            let cbeadPos = getBeadIndex(cbead);
-            currentY = parseInt(cbead.style.top);
-
-            if (clickedBeadIndex > ColumnGapIndex) { //must displace beads upwards
-
-                if (cbeadPos > ColumnGapIndex && cbeadPos <= clickedBeadIndex) { //current bead is below gap and above clicked bead
-                    currentY -= beadSize; // move beadSize units upwards
-                    cbead.style.top = currentY.toString() + "px";
-                }
-
-            } else { //must displace beads downwards
-                if (cbeadPos < ColumnGapIndex && cbeadPos >= clickedBeadIndex) { //current bead is above gap and below clicked bead
-                    currentY += beadSize; // move beadSize units downwards
-                    cbead.style.top = currentY.toString() + "px";
-                }
-            }
-        });
-        //update gap position
-        gapPosition[currentColumnIndex] = clickedBeadIndex;
-        // showBeadPos();
-
-        //update counter 
-        let currentCounter = counterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
-        currentCounter.textContent = clickedBeadIndex;
-
-        //show animation if counter shows 10
-        // if (clickedBeadIndex == 10) {
-        //     currentCounter.classList.add("error-animation");
-        // } else {
-        //     currentCounter.classList.remove("error-animation");
-        // }
-    });
-});
-
-//implement abacus auto-fill
-const columnsArray = columnContainer.querySelectorAll(".column");
-const submitbtn = document.querySelector(".submitbtn");
-const num1Cells = num1.querySelectorAll(".counter");
-
 function shiftGap(columnDiv, newGapPosition) {
     //shifts the gap in a specific column to a new position
     //returns true if at least 1 bead changed position
@@ -207,6 +156,45 @@ function shiftGap(columnDiv, newGapPosition) {
     return AbacusChanged;
 }
 
+function UserFillAbacus(e){
+    //Prevent user from displacing other beads onclick
+    beads.forEach(bead => {
+    bead.removeEventListener("click", UserFillAbacus);
+    });
+
+    let clickedBead = e.target;
+    let clickedColumn = clickedBead.parentNode; //column containing clicked bead
+    let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
+    let currentColumnIndex = getColumnIndex(clickedColumn); //left-most column has index 0
+    let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
+    let currentColumnBeads = clickedColumn.querySelectorAll(".bead"); //all beads in current column
+
+    shiftGap(clickedColumn, clickedBeadIndex);
+    //show animation if counter shows 10
+    // if (clickedBeadIndex == 10) {
+    //     currentCounter.classList.add("error-animation");
+    // } else {
+    //     currentCounter.classList.remove("error-animation");
+    // }
+
+    //when user is done with 1 click, re-enable eventlisteners
+    abacus.addEventListener("transitionend", e => {
+        beads.forEach(bead => {
+            bead.addEventListener("click", UserFillAbacus);
+        });
+    }, { once: true });
+}
+
+//Allow user to displace beads onclick
+beads.forEach(bead => {
+    bead.addEventListener("click", UserFillAbacus);
+});
+
+//implement abacus auto-fill
+const columnsArray = columnContainer.querySelectorAll(".column");
+const submitbtn = document.querySelector(".submitbtn");
+const num1Cells = num1.querySelectorAll(".counter");
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -245,8 +233,7 @@ async function AnimateAutoFillAbacus() {
     //ignore other keydown events
     document.removeEventListener("keydown", AutoFillAbacus);
 
-
-    //move beads in each cplmn
+    //move beads in each column
     for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
         num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex];
         let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
