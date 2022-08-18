@@ -166,13 +166,19 @@ const TIME_BETWEEN_AUTOFILL = 200; //default 1000
 const instructionContainer = document.querySelector(".instructions-container");
 let currentNum2Column = num2Cells.length;
 let currentNum2Digit;
+let currentNum1Digit;
+let carry = 0;
+let gameOver = false;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function resetAll() {
+    //sets abacus and everything else to their default state.
     //returns true if there was a change in position of beads
+
+    gameOver = false;
 
     //reset color of num1 cells
     num1Cells.forEach(cell => {
@@ -188,12 +194,16 @@ function resetAll() {
     //reset instruction-container
     instructionContainer.textContent = "";
 
+    //reset carry 
+    carry = 0;
+
     let AbacusChanged = false;
     //place gap at top in each column
     columnsArray.forEach(column => {
         let k = shiftGap(column, 0);
         if (k == true) AbacusChanged = true;
     });
+
     return AbacusChanged;
 }
 
@@ -218,11 +228,14 @@ function EnableComputerAssistance(event) {
 
 async function showNewInstruction() {
     if (currentNum2Column == 0){
+        gameOver = true;
         instructionContainer.textContent = `Done ! 👍`;
         return;
     } 
     currentNum2Column--;
     num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
+
+    currentNum1Digit = parseInt(num1Cells[currentNum2Column].textContent);
     currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
 
     //skip instructions for 0s.
@@ -230,6 +243,7 @@ async function showNewInstruction() {
         await sleep(TIME_BETWEEN_AUTOFILL); 
         currentNum2Column--;
         if (currentNum2Column < 0){
+            gameOver = true;
             instructionContainer.textContent = `Done ! 👍`;
             return;
         } 
@@ -249,13 +263,32 @@ function UserFillAbacus(e) {
     let clickedColumn = clickedBead.parentNode; //column containing clicked bead
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
     let clickedColumnIndex = getColumnIndex(clickedColumn);
-    let oldGapPos = gapPosition[clickedColumnIndex];
+
+    if(gameOver)return;
+
     shiftGap(clickedColumn, clickedBeadIndex);
+    
 
     //when user is done with 1 click, re-enable eventlisteners
-    abacus.addEventListener("transitionend", e => {
+    abacus.addEventListener("transitionend", () => {
+        currentNum1Digit = parseInt(num1Cells[currentNum2Column].textContent);
+        currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
+
+        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry)%10;
+        let AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
+        let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent) ;
+
+        //check if user correctly made the correct move
+        if (currentCounterDigit == expectedCounterDigit){ 
+            //calculate carry
+
+            carry = Math.floor((currentNum2Digit + currentNum1Digit)/10);
+
+            showNewInstruction();
+        }
+
+        //enable event listeners
         beads.forEach(bead => {
-            if (clickedBeadIndex == currentNum2Digit + oldGapPos) showNewInstruction();
             bead.addEventListener("click", UserFillAbacus);
         });
     }, { once: true });
@@ -275,7 +308,7 @@ async function AnimateAutoFillAbacus() {
 
     //autofill is over at this point
 
-    //re-allow user to call computerAssitance
+    //re-allow user to call computerAssitance to reset if needed.
     document.addEventListener("keydown", EnableComputerAssistance);
 
     // show first instruction
