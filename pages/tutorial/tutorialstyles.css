@@ -1,52 +1,64 @@
-body{
-    margin:10px;
+/* import font for abacus counter */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@600&display=swap');
+
+body {
     padding: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.operations{
-  height:50px;
-  width: 50px;
-  outline:3px solid;
+
+.submitbtn {
+    height: 100px;
+    width: 100px;
+    font-size: large;
+    background-color: gray;
 }
-.submitbtn{
-  height: 100px;
-  width:100px;
-  font-size: large;
-  background-color: gray;
-}
-.container{
+
+.container {
+    outline: 1px solid;
     display: flex;
-    height: 100%;
-    gap:10em;
+    height: auto;
+    gap: 10em;
 }
 
-.assist-container{
+.assist-container {
     width: 500px;
-    outline:1px solid;
+    outline: 1px solid;
+    outline: 5px solid red;
+}
 
+.instructions-container {
+    font-size: 30px;
+    font-family: 'IBM Plex Sans Hebrew', sans-serif;
+    width: 500px;
+    height: auto;
+    outline: 3px solid blue;
 }
 
 /* abacus css */
-.abacus{
+.abacus {
     width: 250px;
     display: flex;
     flex-direction: column;
     /* outline:5px solid blue; */
 }
-.abacus-bar{
-  height: 15px;
-  border-radius: 10px;
-  width: 100%;
-  background-color: rgb(200, 152, 89);
-  /* box-shadow: 0px 5px 3px rgb(99, 74, 42); */
+
+.abacus-bar {
+    height: 15px;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgb(200, 152, 89);
+    /* box-shadow: 0px 5px 3px rgb(99, 74, 42); */
 }
-.column-container{
+
+.column-container {
     display: flex;
 }
-.column{
+
+.column {
     position: relative;
     /* outline:1px solid black; */
     display: flex;
@@ -55,14 +67,15 @@ body{
     align-items: center;
 }
 
-.counter-container{
+.counter-container {
     margin-top: 10px;
     height: auto;
     display: flex;
     /* outline: 1px solid; */
 }
-.counter{
-    display: flex   ;
+
+.counter {
+    display: flex;
     justify-content: center;
     align-items: center;
     outline: 1px solid;
@@ -71,12 +84,15 @@ body{
     background-color: transparent;
     width: 100%;
 }
-.num1, .num2{
-  /* outline: 1px solid red; */
-  display: flex;
-  color:white;
+
+.num1,
+.num2 {
+    /* outline: 1px solid red; */
+    display: flex;
+    color: white;
 }
-.error-animation{
+
+.error-animation {
     animation: blinker 1s linear infinite;
     color: red;
     outline: 2px solid;
@@ -84,26 +100,28 @@ body{
 
 @keyframes blinker {
     50% {
-      opacity: 0;
+        opacity: 0;
     }
 }
 
-.bead{
+.bead {
     position: relative;
     border-radius: 50%;
     text-align: center;
     font-size: large;
     color: white;
-    box-shadow: inset -3px -2px 3px rgba(0,0,0,.5);
+    box-shadow: inset -3px -2px 3px rgba(0, 0, 0, .5);
     transition: .5s ease-in-out;
 }
 
-.stick{
+.stick {
     position: absolute;
     width: 7px;
-    border-radius: 5px;;
+    border-radius: 5px;
+    ;
     /* outline:1px solid blue; */
     background-color: rgb(132, 132, 132);
-    box-shadow: inset -3px 1px 1px rgba(0,0,0,.5);
-    z-index:-1; /*place stick behind beads*/
+    box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
+    z-index: -1;
+    /*place stick behind beads*/
 }
