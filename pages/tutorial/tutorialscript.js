@@ -161,7 +161,7 @@ const columnsArray = columnContainer.querySelectorAll(".column");
 const submitbtn = document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".counter");
 const num2Cells = num2.querySelectorAll(".counter");
-const TIME_BETWEEN_AUTOFILL = 10; //default 1000
+const TIME_BETWEEN_AUTOFILL = 1000; //default 1000
 
 const instructionContainer = document.querySelector(".instructions-container");
 let currentNum2Column = num2Cells.length;
@@ -171,11 +171,25 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function resetAbacus() {
-    //place gap at top in each column
-    //returns true if there was a change in abacus
+function resetAll() {
+    //returns true if there was a change in position of beads
+
+    //reset color of num1 cells
+    num1Cells.forEach(cell => {
+        cell.style.backgroundColor = DEFAULT_CELL_COLOR;
+    });
+    //reset color of num2 cells
+    num2Cells.forEach(cell => {
+        cell.style.backgroundColor = DEFAULT_CELL_COLOR;
+    });
+    //reset column pointer for num2
+    currentNum2Column = num2Cells.length;
+
+    //reset instruction-container
+    instructionContainer.textContent = "";
 
     let AbacusChanged = false;
+    //place gap at top in each column
     columnsArray.forEach(column => {
         let k = shiftGap(column, 0);
         if (k == true) AbacusChanged = true;
@@ -188,19 +202,8 @@ function EnableComputerAssistance(event) {
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
 
-        //reset color of num1 cells
-        num1Cells.forEach(cell => {
-            cell.style.backgroundColor = DEFAULT_CELL_COLOR;
-        });
-        //reset color of num2 cells
-        num2Cells.forEach(cell => {
-            cell.style.backgroundColor = DEFAULT_CELL_COLOR;
-        });
-        //reset column pointer for num2
-        currentNum2Column = num2Cells.length;
-
         //reset abacus beads
-        let AbacusChanged = resetAbacus();
+        let AbacusChanged = resetAll();
 
         if (AbacusChanged) {
             //wait for bead transitions to be over 
@@ -213,16 +216,17 @@ function EnableComputerAssistance(event) {
     }
 }
 
-function shiftColumnInNum2(){
-    if(currentNum2Column==0)return;
+async function showNewInstruction() {
+    if (currentNum2Column == 0) return;
     currentNum2Column--;
     num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
     currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
 
     //skip instructions for 0s.
-    while(currentNum2Digit==0){
+    while (currentNum2Digit == 0) {
+        await sleep(TIME_BETWEEN_AUTOFILL); 
         currentNum2Column--;
-        if(currentNum2Column<0)return;
+        if (currentNum2Column < 0) return;
         num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
     }
@@ -245,7 +249,7 @@ function UserFillAbacus(e) {
     //when user is done with 1 click, re-enable eventlisteners
     abacus.addEventListener("transitionend", e => {
         beads.forEach(bead => {
-            if(clickedBeadIndex==currentNum2Digit+oldGapPos)shiftColumnInNum2();
+            if (clickedBeadIndex == currentNum2Digit + oldGapPos) showNewInstruction();
             bead.addEventListener("click", UserFillAbacus);
         });
     }, { once: true });
@@ -269,7 +273,7 @@ async function AnimateAutoFillAbacus() {
     document.addEventListener("keydown", EnableComputerAssistance);
 
     // show first instruction
-    shiftColumnInNum2();
+    showNewInstruction();
 
     //re-allow user to click beads
     beads.forEach(bead => {
