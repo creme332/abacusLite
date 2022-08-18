@@ -248,6 +248,7 @@ async function showNewInstruction() {
     while (currentNum2Digit == 0) {
         await sleep(TIME_BETWEEN_AUTOFILL);
         currentNum2Column--;
+        carry = 0;
         if (currentNum2Column < 0) {
             gameOver = true;
             showgameOverInstruction();
