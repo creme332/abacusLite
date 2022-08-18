@@ -1,5 +1,7 @@
 /* import font for abacus counter */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
 
 body {
     padding: 0;
@@ -18,24 +20,30 @@ body {
 }
 
 .container {
-    outline: 1px solid;
+    outline: 10px solid goldenrod;
     display: flex;
+    /* flex-direction: column; */
     height: auto;
     gap: 10em;
 }
 
 .assist-container {
+    display: flex;
+    flex-direction: column;
+    gap:1em;
     width: 500px;
     outline: 1px solid;
     outline: 5px solid red;
 }
 
 .instructions-container {
-    font-size: 30px;
-    font-family: 'IBM Plex Sans Hebrew', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     width: 500px;
-    height: auto;
-    outline: 3px solid blue;
+    height: 100px;
+    background-color: #e1f5fe;
+    font-size: 30px;
+    font-weight: 100;
+    /* outline: 3px solid blue; */
 }
 
 /* abacus css */
@@ -124,4 +132,16 @@ body {
     box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
     z-index: -1;
     /*place stick behind beads*/
+}
+
+@media screen and (max-width:950px) {
+    .container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap:3em;
+    }
+    .assist-container{
+        width: 250px;
+    }
 }
