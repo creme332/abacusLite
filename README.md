@@ -1,16 +1,26 @@
-# web-project-template
+# abacus-tool
 [![Front‑End_Checklist followed](https://img.shields.io/badge/Front‑End_Checklist-followed-brightgreen.svg)](https://github.com/thedaviddias/Front-End-Checklist/)
+![HTML shield](https://img.shields.io/badge/-HTML-blue)
+![](https://img.shields.io/badge/-JavaScript-yellow)
+![](https://img.shields.io/badge/-CSS-orange)
 
+An interactive abacus to help you master the abacus.
 
-A concise description of the project.
-
-![GIF](gifs/gif1.gif)
+![GIF of the abacus website](gifs/gif1.gif)
 
 [▶ Live Preview]()
 
 # 🚀Features
 
+## Tutorial mode 🤖
+- Auto-fill abacus.
+- Integer overflow detection.
+- Step-by-step explanation.
 
+## Rush mode 🏃‍♀️💨
+- Use the abacus to evaluate given expressions before timer runs out.
+## Zen mode 🤪
+- Use abacus as you wish without any interference.
 # 📌 Attributions
 Resource | Source
 ---|---
@@ -20,13 +30,15 @@ resource| owner
 
 # 🔨 To-Do
 - [ ] Make website responsive.
-- [x] Convert shiftGap into async function
 - [ ] Add sitemap.
-- [ ] Add project social media preview.
-- During autofill, prevent user from using abacus.
-Allow only 1 digit in each cell.
-
+- [ ] Allow only 1 digit in each cell. (Use textarea)
+- [ ] create  a function updateCounter(column)
+- [ ] prevent user from changing a correct abacus column
 ### ✔ Done
+- [x] During autofill, prevent user from using abacus.
+- [x] use color coding in instruction instead of column 0,1.,,,
+- [x] Add project social media preview.
+- [x] Convert shiftGap into async function
 
 # 🐛 Bugs
 Bug | How to reproduce | How to fix | Fixed
