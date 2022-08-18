@@ -161,7 +161,7 @@ const columnsArray = columnContainer.querySelectorAll(".column");
 const submitbtn = document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".counter");
 const num2Cells = num2.querySelectorAll(".counter");
-const TIME_BETWEEN_AUTOFILL = 1000; //default 1000
+const TIME_BETWEEN_AUTOFILL = 200; //default 1000
 
 const instructionContainer = document.querySelector(".instructions-container");
 let currentNum2Column = num2Cells.length;
@@ -217,7 +217,10 @@ function EnableComputerAssistance(event) {
 }
 
 async function showNewInstruction() {
-    if (currentNum2Column == 0) return;
+    if (currentNum2Column == 0){
+        instructionContainer.textContent = `Done ! 👍`;
+        return;
+    } 
     currentNum2Column--;
     num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
     currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
@@ -226,7 +229,10 @@ async function showNewInstruction() {
     while (currentNum2Digit == 0) {
         await sleep(TIME_BETWEEN_AUTOFILL); 
         currentNum2Column--;
-        if (currentNum2Column < 0) return;
+        if (currentNum2Column < 0){
+            instructionContainer.textContent = `Done ! 👍`;
+            return;
+        } 
         num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
     }
