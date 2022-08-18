@@ -4,7 +4,7 @@ const beadsPerColumn = 10;
 const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
-const topBeadsColors = ["green", "red", "#F9629F", "blue", "orange"];
+const columnColors = ["green", "red", "hotpink", "blue", "orange"];
 const DEFAULT_CELL_COLOR = "black";
 let gapPosition = []; //gap position in each column. 
 
@@ -81,7 +81,7 @@ function buildAbacus() {
             bead.style.height = beadSize + "px";
             bead.style.width = beadSize + "px";
             bead.style.top = "0px";
-            bead.style.backgroundColor = topBeadsColors[i % topBeadsColors.length];
+            bead.style.backgroundColor = columnColors[i % columnColors.length];
             column.appendChild(bead);
         }
         //add column to columnContainer
@@ -164,7 +164,7 @@ const num2Cells = num2.querySelectorAll(".counter");
 const TIME_BETWEEN_AUTOFILL = 200; //default 1000
 
 const instructionContainer = document.querySelector(".instructions-container");
-let currentNum2Column = num2Cells.length;
+let currentNum2Column = num2Cells.length; //points to current column where addition must take place
 let currentNum2Digit;
 let currentNum1Digit;
 let carry = 0;
@@ -207,6 +207,12 @@ function resetAll() {
     return AbacusChanged;
 }
 
+function showgameOverInstruction() {
+    if (carry == 0)
+        instructionContainer.textContent = `Done ! 👍`;
+    else
+        instructionContainer.textContent = `Integer overflow 👎`;
+}
 function EnableComputerAssistance(event) {
     if (event.code == "Enter") {
         //ignore other keydown events
@@ -227,31 +233,32 @@ function EnableComputerAssistance(event) {
 }
 
 async function showNewInstruction() {
-    if (currentNum2Column == 0){
+    if (currentNum2Column == 0) {
         gameOver = true;
-        instructionContainer.textContent = `Done ! 👍`;
+        showgameOverInstruction();
         return;
-    } 
+    }
     currentNum2Column--;
-    num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
+    num2Cells[currentNum2Column].style.backgroundColor = columnColors[currentNum2Column];
 
     currentNum1Digit = parseInt(num1Cells[currentNum2Column].textContent);
     currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
 
-    //skip instructions for 0s.
+    //skip instructions when num2cell is a 0.
     while (currentNum2Digit == 0) {
-        await sleep(TIME_BETWEEN_AUTOFILL); 
+        await sleep(TIME_BETWEEN_AUTOFILL);
         currentNum2Column--;
-        if (currentNum2Column < 0){
+        if (currentNum2Column < 0) {
             gameOver = true;
-            instructionContainer.textContent = `Done ! 👍`;
+            showgameOverInstruction();
             return;
-        } 
-        num2Cells[currentNum2Column].style.backgroundColor = topBeadsColors[currentNum2Column];
+        }
+        num2Cells[currentNum2Column].style.backgroundColor = columnColors[currentNum2Column];
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
+
     }
 
-    instructionContainer.textContent = `Move ${currentNum2Digit} beads upwards in column ${currentNum2Column}`;
+    instructionContainer.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column`;
 }
 function UserFillAbacus(e) {
     //Prevent user from displacing other beads onclick
@@ -264,25 +271,24 @@ function UserFillAbacus(e) {
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
     let clickedColumnIndex = getColumnIndex(clickedColumn);
 
-    if(gameOver)return;
+    if (gameOver) return;
 
     shiftGap(clickedColumn, clickedBeadIndex);
-    
 
-    //when user is done with 1 click, re-enable eventlisteners
+
+    //when current clicked bead animation is over
     abacus.addEventListener("transitionend", () => {
         currentNum1Digit = parseInt(num1Cells[currentNum2Column].textContent);
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
 
-        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry)%10;
+        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % 10;
         let AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
-        let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent) ;
+        let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent);
 
         //check if user correctly made the correct move
-        if (currentCounterDigit == expectedCounterDigit){ 
-            //calculate carry
-
-            carry = Math.floor((currentNum2Digit + currentNum1Digit)/10);
+        if (currentCounterDigit == expectedCounterDigit) {
+            //calculate carry for next column
+            carry = Math.floor((currentNum2Digit + currentNum1Digit + carry) / 10);
 
             showNewInstruction();
         }
@@ -299,7 +305,7 @@ async function AnimateAutoFillAbacus() {
 
     //move beads in each column
     for (let columnIndex = num1Cells.length - 1; columnIndex > -1; columnIndex--) {
-        num1Cells[columnIndex].style.backgroundColor = topBeadsColors[columnIndex % topBeadsColors.length];
+        num1Cells[columnIndex].style.backgroundColor = columnColors[columnIndex % columnColors.length];
         let k = parseInt(num1Cells[columnIndex].textContent); //add k more beads in i-th column 
         newGapPosition = gapPosition[columnIndex] + k;
         shiftGap(columnsArray[columnIndex], newGapPosition);
