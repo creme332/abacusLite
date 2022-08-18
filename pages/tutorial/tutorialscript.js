@@ -1,6 +1,6 @@
 const abacus = document.querySelector(".abacus");
 const numberOfColumns = 5;
-const beadsPerColumn = 10;
+const beadsPerColumn = 10; // DO NOT CHANGE
 const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
@@ -96,12 +96,14 @@ buildAbacus();
 buildNumGrid();
 
 const beads = document.querySelectorAll(".bead");
+const AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
 
-function showBeadPos() {
-    beads.forEach(b => {
-        b.textContent = getBeadIndex(b);
-    })
-}
+// function showBeadPos() {
+//     //for debugging
+//     beads.forEach(b => {
+//         b.textContent = getBeadIndex(b);
+//     })
+// }
 
 function getBeadIndex(bead) {
     //let currentColumn = bead.parentNode;
@@ -148,6 +150,13 @@ function shiftGap(columnDiv, newGapPosition) {
 
     //update gap position
     gapPosition[currentColumnIndex] = newGapPosition;
+
+    //show overflow animation if column has 10 active beads
+    if(newGapPosition==10){
+        AbacusCounterArray[currentColumnIndex].classList.add("error-animation");
+    }else{
+        AbacusCounterArray[currentColumnIndex].classList.remove("error-animation");
+    }
 
     //update counter for current column
     let currentCounter = abacusCounterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
@@ -283,7 +292,6 @@ function UserFillAbacus(e) {
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].textContent);
 
         let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % 10;
-        let AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
         let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent);
 
         //check if user correctly made the correct move
