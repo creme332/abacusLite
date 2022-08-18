@@ -12,8 +12,8 @@ console.assert(columnHeight % beadSize == 0, "Column height must be a multiple o
 console.assert(columnHeight / beadSize == (beadsPerColumn + 1), "Extra space in each column should be equal to 1 bead size");
 
 //create container to store each counter
-const counterContainer = document.createElement("div");
-counterContainer.className = "counter-container";
+const abacusCounterContainer = document.createElement("div");
+abacusCounterContainer.className = "counter-container";
 
 function buildAbacus() {
     const columnContainer = document.createElement("div");
@@ -35,7 +35,7 @@ function buildAbacus() {
         counter.textContent = gapPosition[i];
 
         //add counter to counter-container
-        counterContainer.appendChild(counter);
+        abacusCounterContainer.appendChild(counter);
 
         //create column
         let column = document.createElement("div");
@@ -67,7 +67,7 @@ function buildAbacus() {
     abacus.appendChild(columnContainer);
     abacus.appendChild(bottomBar);
 
-    abacus.appendChild(counterContainer);
+    abacus.appendChild(abacusCounterContainer);
 }
 buildAbacus();
 const beads = document.querySelectorAll(".bead");
@@ -122,6 +122,10 @@ beads.forEach(bead => {
         });
         //update gap position
         gapPosition[currentColumnIndex] = clickedBeadIndex;
+
+        //update counter for current column
+        let currentCounter = abacusCounterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
+        currentCounter.textContent = clickedBeadIndex;
         // showBeadPos();
     });
 });
