@@ -20,7 +20,7 @@ body {
 }
 
 .container {
-    outline: 10px solid goldenrod;
+    /* outline: 10px solid goldenrod; */
     display: flex;
     /* flex-direction: column; */
     height: auto;
@@ -30,10 +30,9 @@ body {
 .assist-container {
     display: flex;
     flex-direction: column;
-    gap:1em;
+    gap: 1em;
     width: 500px;
-    outline: 1px solid;
-    outline: 5px solid red;
+    /* outline: 5px solid red; */
 }
 
 .instructions-container {
@@ -43,6 +42,7 @@ body {
     background-color: #e1f5fe;
     font-size: 30px;
     font-weight: 100;
+    padding: 10px;
     /* outline: 3px solid blue; */
 }
 
@@ -93,12 +93,33 @@ body {
     width: 100%;
 }
 
+.user-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
 .num1,
 .num2 {
     /* outline: 1px solid red; */
     display: flex;
+    gap: 1em;
     color: white;
 }
+
+.cell {
+    border-radius: 5px;
+    text-align: center;
+    font-size: 80px;
+    height: 100px;
+    width: 100px;
+    color: white;
+}
+
+textarea:focus {
+    outline: 5px solid goldenrod;
+}
+
 
 .error-animation {
     animation: blinker 1s linear infinite;
@@ -139,9 +160,10 @@ body {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap:3em;
+        gap: 3em;
     }
-    .assist-container{
+
+    .assist-container {
         width: 250px;
     }
 }
