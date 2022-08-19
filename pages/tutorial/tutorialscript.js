@@ -4,7 +4,7 @@ const beadsPerColumn = 10; // DO NOT CHANGE
 const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
-const columnColors = ["green", "red", "hotpink", "blue", "orange"];
+const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
 const DEFAULT_CELL_COLOR = "#fafafa";
 let gapPosition = []; //gap position in each column. 
 
@@ -315,8 +315,11 @@ async function showNewInstruction() {
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].value);
 
     }
-
-    instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
+    if(currentNum2Digit==1){ 
+        instructionPara.textContent = `Move ${[currentNum2Digit]} bead upwards in ${columnColors[currentNum2Column]} column.`;
+    }else{
+        instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
+    }
 }
 function UserFillAbacus(e) {
     //Prevent user from displacing other beads onclick
