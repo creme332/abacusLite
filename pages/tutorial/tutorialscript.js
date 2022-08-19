@@ -6,7 +6,10 @@ const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
 const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
 const DEFAULT_CELL_COLOR = "#fafafa";
-let gapPosition = []; //gap position in each column. 
+let gapPosition = [];
+//gapPosition[2] == 3 means the gap in the 2nd
+// column(zero-based index) is found on the 3rd row (zero-based index).
+// Top row has an index of 0.
 
 // create a container to store each column in abacus
 const columnContainer = document.createElement("div");
@@ -16,14 +19,17 @@ columnContainer.className = "column-container";
 const abacusCounterContainer = document.createElement("div");
 abacusCounterContainer.className = "counter-container";
 
-//create a container to take user input
+//get user-input container
 const cellContainer = document.querySelector(".user-input");
 const num1 = document.querySelector(".num1");
 const num2 = document.querySelector(".num2");
 
+//get paragraph where instructions will be entered.
 const instructionPara = document.querySelector("#instruction");
+
+//get paragraph where integer overflow warning will be entered.
 const warningPara = document.querySelector("#warning");
-let overflowedColumnsCount = 0;
+let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
 
 function ColumnOverflow(EnableErrorAnimation, currentColumnIndex) {
     //when a column counter is 10, this function is called with parameter true
@@ -38,6 +44,7 @@ function ColumnOverflow(EnableErrorAnimation, currentColumnIndex) {
         currentColumn.classList.remove("error-animation");
     }
 
+    //remove warning paragraph if there are no overflowing columns
     if (overflowedColumnsCount == 0) {
         warningPara.style.display = "none";
     }
@@ -65,15 +72,15 @@ function buildNumGrid() {
         num2.appendChild(cell2);
     }
 }
-function verifyCellInput(e) {
+
+function verifyCellInput(e) { //verify user input in num2
     let cell = e.target;
     let inputText = cell.value;
-    if (!(inputText >= "0" && inputText <= "9")) {
+
+    if (!(inputText >= "0" && inputText <= "9")) { //invalid user input
         cell.classList.add("error-animation");
         instructionPara.textContent = "Invalid input 😭";
-        // cell.style.backgroundColor ="red";
     }
-    // else cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     else {
         instructionPara.textContent = "Press Enter key when you're done.";
         cell.classList.remove("error-animation");
@@ -101,7 +108,7 @@ function buildAbacus() {
         //add counter to counter-container
         abacusCounterContainer.appendChild(counter);
 
-        //create column
+        //create a column for abacus
         let column = document.createElement("div");
         column.className = "column";
         column.style.height = columnHeight + "px";
@@ -125,7 +132,6 @@ function buildAbacus() {
             bead.style.backgroundColor = columnColors[i % columnColors.length];
             column.appendChild(bead);
         }
-        //add column to columnContainer
         columnContainer.appendChild(column);
     }
     abacus.appendChild(columnContainer);
@@ -134,19 +140,15 @@ function buildAbacus() {
     abacus.appendChild(abacusCounterContainer);
 }
 buildAbacus();
-buildNumGrid();
+buildNumGrid(); // num grid the grid which will accept user input
 
 const beads = document.querySelectorAll(".bead");
 const AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
 
-// function showBeadPos() {
-//     //for debugging
-//     beads.forEach(b => {
-//         b.textContent = getBeadIndex(b);
-//     })
-// }
-
 function getBeadIndex(bead) {
+    //returns the row position of bead
+    //top row has index 0
+
     //let currentColumn = bead.parentNode;
     //let relativeY = bead.getBoundingClientRect().top - currentColumn.getBoundingClientRect().top;
     let relativeY = bead.offsetTop;
@@ -154,6 +156,8 @@ function getBeadIndex(bead) {
     return beadIndex;
 }
 function getColumnIndex(column) {
+    //returns the column position of column
+    //left-most column has index 0
     let relativeX = column.getBoundingClientRect().left - abacus.getBoundingClientRect().left;
     let columnIndex = parseInt(relativeX / columnWidth);
     return columnIndex;
@@ -162,12 +166,13 @@ function getColumnIndex(column) {
 function shiftGap(columnDiv, newGapPosition) {
     //shifts the gap in a specific column to a new position
     //returns true if at least 1 bead changed position
+
     let AbacusChanged = false;
     let currentColumnIndex = getColumnIndex(columnDiv); //left-most column has index 0
     let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
     let currentColumnBeads = columnDiv.querySelectorAll(".bead"); //all beads in current column
 
-    //loop through each bead in current column and move it if needed
+    //loop through each bead in current column and move bead if needed
     currentColumnBeads.forEach(cbead => {
         let cbeadPos = getBeadIndex(cbead);
         currentY = parseInt(cbead.style.top);
@@ -192,7 +197,7 @@ function shiftGap(columnDiv, newGapPosition) {
     //update gap position
     gapPosition[currentColumnIndex] = newGapPosition;
 
-    //show overflow animation if column has 10 active beads
+    //show overflow animation if column has 10 used beads
     if (newGapPosition == beadsPerColumn) {
         ColumnOverflow(true, currentColumnIndex);
     } else {
@@ -208,16 +213,15 @@ function shiftGap(columnDiv, newGapPosition) {
 
 //implement abacus auto-fill
 const columnsArray = columnContainer.querySelectorAll(".column");
-const submitbtn = document.querySelector(".submitbtn");
 const num1Cells = num1.querySelectorAll(".cell");
 const num2Cells = num2.querySelectorAll(".cell");
 const TIME_BETWEEN_AUTOFILL = 200; //default 1000
 
-let currentNum2Column = num2Cells.length; //points to current column where addition must take place
+let numGridPtr = num2Cells.length; //points to current column where addition must take place
 let currentNum2Digit;
 let currentNum1Digit;
-let carry = 0;
-let gameOver = false;
+let carry = 0; //carry when performing addition
+let calculationOver = false; //is whole calulation + animation over?
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -227,7 +231,7 @@ function resetAll() {
     //sets abacus and everything else to their default state.
     //returns true if there was a change in position of beads
 
-    gameOver = false;
+    calculationOver = false;
 
     //reset color of num1 cells
     num1Cells.forEach(cell => {
@@ -238,7 +242,7 @@ function resetAll() {
         cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     });
     //reset column pointer for num2
-    currentNum2Column = num2Cells.length;
+    numGridPtr = num2Cells.length;
 
     //reset instruction-container
     instructionPara.textContent = "";
@@ -263,8 +267,9 @@ function showgameOverInstruction() {
     else
         instructionPara.textContent = `Integer overflow 👎`;
 }
+
 function EnableComputerAssistance(event) {
-    if (event.code == "Enter") {
+    if (event.code == "Enter") {//enter key pressed
 
         //check if all user input is valid
         let allCells = cellContainer.querySelectorAll(".cell");
@@ -279,7 +284,7 @@ function EnableComputerAssistance(event) {
         let AbacusChanged = resetAll();
 
         //update instruction 
-        instructionPara.textContent ="Auto-filling abacus for num1 ..."
+        instructionPara.textContent = "Auto-filling abacus for num1 ..."
         if (AbacusChanged) {
             //wait for bead transitions to be over 
             abacus.addEventListener("transitionend", e => {
@@ -292,39 +297,42 @@ function EnableComputerAssistance(event) {
 }
 
 async function showNewInstruction() {
-    if (currentNum2Column == 0) {
-        gameOver = true;
+    if (numGridPtr == 0) { // all columns in num grid have been processed
+        calculationOver = true;
         showgameOverInstruction();
         return;
     }
-    currentNum2Column--;
-    num2Cells[currentNum2Column].style.backgroundColor = columnColors[currentNum2Column];
+    numGridPtr--;
+    num2Cells[numGridPtr].style.backgroundColor = columnColors[numGridPtr];
 
-    currentNum1Digit = parseInt(num1Cells[currentNum2Column].value);
-    currentNum2Digit = parseInt(num2Cells[currentNum2Column].value);
+    currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
+    currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
     //skip instructions when num2cell is a 0.
     while (currentNum2Digit == 0) {
         await sleep(TIME_BETWEEN_AUTOFILL);
-        currentNum2Column--;
+        numGridPtr--;
         carry = 0;
-        if (currentNum2Column < 0) {
-            gameOver = true;
+        if (numGridPtr < 0) {
+            calculationOver = true;
             showgameOverInstruction();
             return;
         }
-        num2Cells[currentNum2Column].style.backgroundColor = columnColors[currentNum2Column];
-        currentNum2Digit = parseInt(num2Cells[currentNum2Column].value);
+        num2Cells[numGridPtr].style.backgroundColor = columnColors[numGridPtr];
+        currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
     }
-    if(currentNum2Digit==1){ 
-        instructionPara.textContent = `Move ${[currentNum2Digit]} bead upwards in ${columnColors[currentNum2Column]} column.`;
-    }else{
-        instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
+    if (currentNum2Digit == 1) { //"bead" 
+        instructionPara.textContent = `Move ${[currentNum2Digit]} bead upwards in ${columnColors[numGridPtr]} column.`;
+    } else { //"beads" 
+        instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[numGridPtr]} column.`;
     }
 }
 function UserFillAbacus(e) {
+    //move beads as per user's click
+
     //Prevent user from displacing other beads onclick
+    //This solved the bead-merging issue.
     beads.forEach(bead => {
         bead.removeEventListener("click", UserFillAbacus);
     });
@@ -334,17 +342,17 @@ function UserFillAbacus(e) {
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
     let clickedColumnIndex = getColumnIndex(clickedColumn);
 
-    if (gameOver) return;
+    if (calculationOver) return;
 
     shiftGap(clickedColumn, clickedBeadIndex);
 
     //when current clicked bead animation is over
     abacus.addEventListener("transitionend", () => {
-        currentNum1Digit = parseInt(num1Cells[currentNum2Column].value);
-        currentNum2Digit = parseInt(num2Cells[currentNum2Column].value);
+        currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
+        currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
         let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % beadsPerColumn;
-        let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent);
+        let currentCounterDigit = parseInt(AbacusCounterArray[numGridPtr].textContent);
 
         //check if user correctly made the correct move
         if (currentCounterDigit == expectedCounterDigit) {
