@@ -4,6 +4,7 @@
 
 
 body {
+    /* background-image: url(../../assets/img/im.jpg); */
     padding: 0;
     height: 100vh;
     display: flex;
@@ -12,15 +13,8 @@ body {
     align-items: center;
 }
 
-.submitbtn {
-    height: 100px;
-    width: 100px;
-    font-size: large;
-    background-color: gray;
-}
-
 .container {
-    outline: 1px solid goldenrod;
+    /* outline: 1px solid goldenrod; */
     display: flex;
     /* flex-direction: column; */
     height: auto;
@@ -51,7 +45,7 @@ body {
     /* width: 250px; */
     display: flex;
     flex-direction: column;
-    outline:5px solid blue;
+    /* outline:5px solid blue; */
 }
 
 .abacus-bar {
@@ -131,7 +125,9 @@ textarea:focus {
     color: red;
     outline: 2px solid;
 }
-
+#warning{
+    display: none;
+}
 @keyframes blinker {
     50% {
         opacity: 0;

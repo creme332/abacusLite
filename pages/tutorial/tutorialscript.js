@@ -16,9 +16,32 @@ columnContainer.className = "column-container";
 const abacusCounterContainer = document.createElement("div");
 abacusCounterContainer.className = "counter-container";
 
+//create a container to take user input
 const cellContainer = document.querySelector(".user-input");
 const num1 = document.querySelector(".num1");
 const num2 = document.querySelector(".num2");
+
+const instructionPara = document.querySelector("#instruction");
+const warningPara = document.querySelector("#warning");
+let overflowedColumnsCount = 0;
+
+function ColumnOverflow(EnableErrorAnimation, currentColumnIndex) {
+    //when a column counter is 10, this function is called with parameter true
+
+    const currentColumn = AbacusCounterArray[currentColumnIndex];
+    if (EnableErrorAnimation) {
+        warningPara.style.display = "block";
+        currentColumn.classList.add("error-animation");
+        overflowedColumnsCount++;
+    } else {
+        if (currentColumn.classList.contains("error-animation")) overflowedColumnsCount--;
+        currentColumn.classList.remove("error-animation");
+    }
+
+    if (overflowedColumnsCount == 0) {
+        warningPara.style.display = "none";
+    }
+}
 
 function buildNumGrid() {
     for (let i = 0; i < numberOfColumns; i++) {
@@ -47,12 +70,12 @@ function verifyCellInput(e) {
     let inputText = cell.value;
     if (!(inputText >= "0" && inputText <= "9")) {
         cell.classList.add("error-animation");
-        instructionContainer.textContent = "Invalid input 😭";
+        instructionPara.textContent = "Invalid input 😭";
         // cell.style.backgroundColor ="red";
     }
     // else cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     else {
-        instructionContainer.textContent = "Press Enter key when you're done.";
+        instructionPara.textContent = "Press Enter key when you're done.";
         cell.classList.remove("error-animation");
     }
 }
@@ -170,10 +193,10 @@ function shiftGap(columnDiv, newGapPosition) {
     gapPosition[currentColumnIndex] = newGapPosition;
 
     //show overflow animation if column has 10 active beads
-    if (newGapPosition == 10) {
-        AbacusCounterArray[currentColumnIndex].classList.add("error-animation");
+    if (newGapPosition == beadsPerColumn) {
+        ColumnOverflow(true, currentColumnIndex);
     } else {
-        AbacusCounterArray[currentColumnIndex].classList.remove("error-animation");
+        ColumnOverflow(false, currentColumnIndex);
     }
 
     //update abacus counter for current column
@@ -190,7 +213,6 @@ const num1Cells = num1.querySelectorAll(".cell");
 const num2Cells = num2.querySelectorAll(".cell");
 const TIME_BETWEEN_AUTOFILL = 200; //default 1000
 
-const instructionContainer = document.querySelector(".instructions-container");
 let currentNum2Column = num2Cells.length; //points to current column where addition must take place
 let currentNum2Digit;
 let currentNum1Digit;
@@ -219,7 +241,7 @@ function resetAll() {
     currentNum2Column = num2Cells.length;
 
     //reset instruction-container
-    instructionContainer.textContent = "";
+    instructionPara.textContent = "";
 
     //reset carry 
     carry = 0;
@@ -237,9 +259,9 @@ function resetAll() {
 function showgameOverInstruction() {
     let firstAbacusCounter = AbacusCounterArray[0]; //left-most counter
     if (carry == 0 && firstAbacusCounter.textContent != "10")
-        instructionContainer.textContent = `Done ! 👍`;
+        instructionPara.textContent = `Done ! 👍`;
     else
-        instructionContainer.textContent = `Integer overflow 👎`;
+        instructionPara.textContent = `Integer overflow 👎`;
 }
 function EnableComputerAssistance(event) {
     if (event.code == "Enter") {
@@ -294,7 +316,7 @@ async function showNewInstruction() {
 
     }
 
-    instructionContainer.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
+    instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
 }
 function UserFillAbacus(e) {
     //Prevent user from displacing other beads onclick
@@ -311,19 +333,18 @@ function UserFillAbacus(e) {
 
     shiftGap(clickedColumn, clickedBeadIndex);
 
-
     //when current clicked bead animation is over
     abacus.addEventListener("transitionend", () => {
         currentNum1Digit = parseInt(num1Cells[currentNum2Column].value);
         currentNum2Digit = parseInt(num2Cells[currentNum2Column].value);
 
-        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % 10;
+        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % beadsPerColumn;
         let currentCounterDigit = parseInt(AbacusCounterArray[currentNum2Column].textContent);
 
         //check if user correctly made the correct move
         if (currentCounterDigit == expectedCounterDigit) {
             //calculate carry for next column
-            carry = Math.floor((currentNum2Digit + currentNum1Digit + carry) / 10);
+            carry = Math.floor((currentNum2Digit + currentNum1Digit + carry) / beadsPerColumn);
 
             showNewInstruction();
         }
