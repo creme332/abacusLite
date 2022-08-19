@@ -52,7 +52,7 @@ function verifyCellInput(e) {
     }
     // else cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     else {
-        instructionContainer.textContent = "";
+        instructionContainer.textContent = "Press Enter key when you're done.";
         cell.classList.remove("error-animation");
     }
 }
@@ -294,7 +294,7 @@ async function showNewInstruction() {
 
     }
 
-    instructionContainer.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column`;
+    instructionContainer.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[currentNum2Column]} column.`;
 }
 function UserFillAbacus(e) {
     //Prevent user from displacing other beads onclick
