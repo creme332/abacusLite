@@ -47,6 +47,7 @@ resource| owner
 - [ ] Prevent user from clicking beads in a correct abacus column.
 - [ ] Fix merging beads glitch in zen mode.
 - [ ] Add a diagram showing skeleton and class names.
+- [ ] Make website print-friendly.
 - [ ] Implement rush mode.
 ### ✔ Done
 - [x] Add explanation when overflow occurs.

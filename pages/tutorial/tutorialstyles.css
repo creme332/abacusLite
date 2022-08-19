@@ -135,6 +135,7 @@ textarea:focus {
 }
 #warning{
     display: none;
+    padding:5px;
 }
 @keyframes blinker {
     50% {
