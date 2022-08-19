@@ -12,15 +12,29 @@ An interactive abacus to help you master the abacus.
 
 # 🚀Features
 
-## Tutorial mode 🤖
-- Auto-fill abacus.
+- Responsive website.
+- Simple UI.
+
+## Tutorial mode 
+Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations.
+
+- Input validation.
+- Auto-fill feature.
 - Integer overflow detection.
 - Step-by-step explanation.
 
-## Rush mode 🏃‍♀️💨
-- Use the abacus to evaluate given expressions before timer runs out.
-## Zen mode 🤪
-- Use abacus as you wish without any interference.
+## Test mode 🏃‍♀️💨
+Use the abacus to evaluate given expressions before timer runs out.
+- No computer assistance.
+- Timer
+
+## Zen mode 🤪 
+A minimalist abacus simulator.
+
+- No computer assistance.
+- No animations.
+- Background music. (optional)
+
 # 📌 Attributions
 Resource | Source
 ---|---
@@ -29,14 +43,18 @@ resource| owner
 # 🕓 History
 
 # 🔨 To-Do
-- [ ] Make website responsive.
 - [ ] Add sitemap.
-- [ ] Allow only 1 digit in each cell. (Use textarea)
-- [ ] create  a function updateCounter(column)
-- [ ] prevent user from changing a correct abacus column
+- [ ] Prevent user from clicking beads in a correct abacus column.
+- [ ] Fix merging beads glitch in zen mode.
+- [ ] Add a diagram showing skeleton and class names.
+- [ ] Implement rush mode.
 ### ✔ Done
+- [x] Add explanation when overflow occurs.
+- [x] Label cells for num1 and num2.
+- [x] Allow only 1 digit in each cell. (Use textarea)
+- [x] Make website responsive.
 - [x] During autofill, prevent user from using abacus.
-- [x] use color coding in instruction instead of column 0,1.,,,
+- [x] use color coding in instruction instead of column 0,1...
 - [x] Add project social media preview.
 - [x] Convert shiftGap into async function
 
