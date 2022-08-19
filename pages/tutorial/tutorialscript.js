@@ -5,7 +5,7 @@ const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
 const columnColors = ["green", "red", "hotpink", "blue", "orange"];
-const DEFAULT_CELL_COLOR = "black";
+const DEFAULT_CELL_COLOR = "#fafafa";
 let gapPosition = []; //gap position in each column. 
 
 // create a container to store each column in abacus
@@ -47,10 +47,14 @@ function verifyCellInput(e) {
     let inputText = cell.value;
     if (!(inputText >= "0" && inputText <= "9")) {
         cell.classList.add("error-animation");
+        instructionContainer.textContent = "Invalid input 😭";
         // cell.style.backgroundColor ="red";
     }
     // else cell.style.backgroundColor = DEFAULT_CELL_COLOR;
-    else cell.classList.remove("error-animation");
+    else {
+        instructionContainer.textContent = "";
+        cell.classList.remove("error-animation");
+    }
 }
 
 function buildAbacus() {
@@ -239,6 +243,13 @@ function showgameOverInstruction() {
 }
 function EnableComputerAssistance(event) {
     if (event.code == "Enter") {
+
+        //check if all user input is valid
+        let allCells = cellContainer.querySelectorAll(".cell");
+        for (cell of allCells) {
+            if (cell.classList.contains("error-animation")) return;
+        }
+
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
 
