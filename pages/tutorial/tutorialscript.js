@@ -278,6 +278,8 @@ function EnableComputerAssistance(event) {
         //reset abacus beads
         let AbacusChanged = resetAll();
 
+        //update instruction 
+        instructionPara.textContent ="Auto-filling abacus for num1 ..."
         if (AbacusChanged) {
             //wait for bead transitions to be over 
             abacus.addEventListener("transitionend", e => {
