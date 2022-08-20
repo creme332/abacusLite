@@ -2,7 +2,7 @@
 const abacus = document.querySelector(".abacus");
 const numberOfColumns = 5;
 const beadsPerColumn = 10; // DO NOT CHANGE
-const beadSize = 40; //px
+const beadSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--BEAD-SIZE')); //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
 const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
