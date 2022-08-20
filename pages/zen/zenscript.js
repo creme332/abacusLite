@@ -1,9 +1,17 @@
 const abacus = document.querySelector(".abacus");
-const numberOfColumns = 10;
+let numberOfColumns = 10;
 const beadsPerColumn = 10; // DO NOT CHANGE
-const beadSize = 40; //px
+let beadSize = 40; //px
+let columnWidth = beadSize + 10; //px
+
+const vw = document.documentElement.clientWidth;
+if(vw<740){
+    numberOfColumns = 7;
+    beadSize = 30; //px
+    columnWidth = beadSize+5;
+}
+
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
-const columnWidth = beadSize + 10; //px
 const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
 let gapPosition = []; //gap position in each column. 
 
@@ -53,6 +61,8 @@ function buildAbacus() {
     abacus.appendChild(columnContainer);
     abacus.appendChild(bottomBar);
 }
+
+
 buildAbacus();
 
 const beads = document.querySelectorAll(".bead");
