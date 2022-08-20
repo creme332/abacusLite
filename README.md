@@ -29,7 +29,7 @@ Use the abacus to evaluate given expressions before timer runs out.
 - Timer
 
 ## Zen mode 🤪 
-A minimalist abacus simulator.
+Use the classic abacus.
 
 - No computer assistance.
 - No animations.
@@ -39,17 +39,21 @@ A minimalist abacus simulator.
 Resource | Source
 ---|---
 resource| owner
-
+<a href='https://pngtree.com/so/Hand'>Hand png from pngtree.com/</a>
+https://pngtree.com/freebackground/hand-drawn-education-math-background_1176980.html
 # 🕓 History
 
 # 🔨 To-Do
 - [ ] Add sitemap.
-- [ ] Prevent user from clicking beads in a correct abacus column.
-- [ ] Fix merging beads glitch in zen mode.
+- [ ] Tutorial mode : Prevent user from clicking beads in a correct abacus column.
 - [ ] Add a diagram showing skeleton and class names.
-- [ ] Make website print-friendly.
 - [ ] Implement rush mode.
+- [ ] Identify and remove unused css.
+- [ ] Add sound effects to zen mode.
+
 ### ✔ Done
+- [x] Make website print-friendly.
+- [x] Fix merging beads glitch in zen mode.
 - [x] Add explanation when overflow occurs.
 - [x] Label cells for num1 and num2.
 - [x] Allow only 1 digit in each cell. (Use textarea)
