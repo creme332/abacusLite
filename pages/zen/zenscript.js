@@ -1,6 +1,6 @@
 const abacus = document.querySelector(".abacus");
 const numberOfColumns = 10;
-const beadsPerColumn = 10;
+const beadsPerColumn = 10; // DO NOT CHANGE
 const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
@@ -54,12 +54,8 @@ function buildAbacus() {
     abacus.appendChild(bottomBar);
 }
 buildAbacus();
+
 const beads = document.querySelectorAll(".bead");
-function showBeadPos() {
-    beads.forEach(b => {
-        b.textContent = getBeadIndex(b);
-    })
-}
 
 function getBeadIndex(bead) {
     //let currentColumn = bead.parentNode;
@@ -68,43 +64,63 @@ function getBeadIndex(bead) {
     let beadIndex = parseInt(relativeY / beadSize);
     return beadIndex;
 }
-// showBeadPos();
+
 function getColumnIndex(column) {
     let relativeX = column.getBoundingClientRect().left - abacus.getBoundingClientRect().left;
     let columnIndex = parseInt(relativeX / columnWidth);
     return columnIndex;
 }
 
+function shiftGapPosition(columnDiv, newGapPosition) {
+    //shifts the gap in a specific column to a new position
+
+    let currentColumnIndex = getColumnIndex(columnDiv); //left-most column has index 0
+    let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
+    let currentColumnBeads = columnDiv.querySelectorAll(".bead"); //all beads in current column
+
+    //loop through each bead in current column and move bead if needed
+    currentColumnBeads.forEach(cbead => {
+        let cbeadPos = getBeadIndex(cbead);
+        currentY = parseInt(cbead.style.top);
+
+        if (newGapPosition > ColumnGapIndex) { //must displace beads upwards
+
+            if (cbeadPos > ColumnGapIndex && cbeadPos <= newGapPosition) { //current bead is below gap and above clicked bead
+                currentY -= beadSize; // move beadSize units upwards
+                cbead.style.top = currentY.toString() + "px";
+            }
+
+        } else { //must displace beads downwards
+            if (cbeadPos < ColumnGapIndex && cbeadPos >= newGapPosition) { //current bead is above gap and below clicked bead
+                currentY += beadSize; // move beadSize units downwards
+                cbead.style.top = currentY.toString() + "px";
+            }
+        }
+    });
+    //update gap position
+    gapPosition[currentColumnIndex] = newGapPosition;
+}
+
+function displaceBead(e){
+    //disable event listener for all beads 
+    beads.forEach(bead => {
+        bead.removeEventListener("click", displaceBead);
+    });
+
+    let clickedBead = e.target;
+    let clickedColumn = clickedBead.parentNode; //column containing clicked bead
+    let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
+    shiftGapPosition(clickedColumn,clickedBeadIndex);
+
+    //when bead displacement animation is over, re-enable event listeners for beads.
+    abacus.addEventListener("transitionend", e => {
+        beads.forEach(bead => {
+            bead.addEventListener("click", displaceBead);
+        });
+    }, { once: true });
+}
+
 //displace beads onclick
 beads.forEach(bead => {
-    bead.addEventListener("click", e => {
-        let clickedBead = e.target;
-        let clickedColumn = clickedBead.parentNode; //column containing clicked bead
-        let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
-        let currentColumnIndex = getColumnIndex(clickedColumn); //left-most column has index 0
-        let ColumnGapIndex = gapPosition[currentColumnIndex]; // index of gap in clickedColumn 
-        let currentColumnBeads = clickedColumn.querySelectorAll(".bead"); //all beads in current column
-
-        //loop through each bead in current column and move it if needed
-        currentColumnBeads.forEach(cbead => {
-            let cbeadPos = getBeadIndex(cbead);
-            currentY = parseInt(cbead.style.top);
-
-            if (clickedBeadIndex > ColumnGapIndex) { //must displace beads upwards
-
-                if (cbeadPos > ColumnGapIndex && cbeadPos <= clickedBeadIndex) { //current bead is below gap and above clicked bead
-                    currentY -= beadSize; // move beadSize units upwards
-                    cbead.style.top = currentY.toString() + "px";
-                }
-
-            } else { //must displace beads downwards
-                if (cbeadPos < ColumnGapIndex && cbeadPos >= clickedBeadIndex) { //current bead is above gap and below clicked bead
-                    currentY += beadSize; // move beadSize units downwards
-                    cbead.style.top = currentY.toString() + "px";
-                }
-            }
-        });
-        //update gap position
-        gapPosition[currentColumnIndex] = clickedBeadIndex;
-    });
+    bead.addEventListener("click", displaceBead);
 });
