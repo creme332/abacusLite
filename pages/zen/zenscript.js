@@ -4,16 +4,12 @@ const beadsPerColumn = 10;
 const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
-const topBeadsColors = ["green", "red", "#F9629F", "blue", "orange"];
+const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
 let gapPosition = []; //gap position in each column. 
 
 console.assert(numberOfColumns > 0 && beadsPerColumn > 0, "Invalid abacus size");
 console.assert(columnHeight % beadSize == 0, "Column height must be a multiple of bead size");
 console.assert(columnHeight / beadSize == (beadsPerColumn + 1), "Extra space in each column should be equal to 1 bead size");
-
-//create container to store each counter
-const abacusCounterContainer = document.createElement("div");
-abacusCounterContainer.className = "counter-container";
 
 function buildAbacus() {
     const columnContainer = document.createElement("div");
@@ -26,16 +22,6 @@ function buildAbacus() {
     for (let i = 0; i < numberOfColumns; i++) {
         //initially, gap is found at top for each column
         gapPosition.push(0);
-
-        //create a counter for current column
-        let counter = document.createElement("div");
-        counter.className = "counter";
-        counter.style.width = columnWidth + "px";
-        counter.style.height = beadSize + "px";
-        counter.textContent = gapPosition[i];
-
-        //add counter to counter-container
-        abacusCounterContainer.appendChild(counter);
 
         //create column
         let column = document.createElement("div");
@@ -58,7 +44,7 @@ function buildAbacus() {
             bead.style.height = beadSize + "px";
             bead.style.width = beadSize + "px";
             bead.style.top="0px";
-            bead.style.backgroundColor = topBeadsColors[i % topBeadsColors.length];
+            bead.style.backgroundColor = columnColors[i % columnColors.length];
             column.appendChild(bead);
         }
         //add column to columnContainer
@@ -66,8 +52,6 @@ function buildAbacus() {
     }
     abacus.appendChild(columnContainer);
     abacus.appendChild(bottomBar);
-
-    abacus.appendChild(abacusCounterContainer);
 }
 buildAbacus();
 const beads = document.querySelectorAll(".bead");
@@ -122,10 +106,5 @@ beads.forEach(bead => {
         });
         //update gap position
         gapPosition[currentColumnIndex] = clickedBeadIndex;
-
-        //update counter for current column
-        let currentCounter = abacusCounterContainer.querySelector(`div:nth-child(${currentColumnIndex + 1})`);
-        currentCounter.textContent = clickedBeadIndex;
-        // showBeadPos();
     });
 });

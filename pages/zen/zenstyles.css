@@ -2,19 +2,16 @@
 
 body {
     height: 100vh;
+    /* width: 100vw; */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-}
-
-.img-container {
-    display: flex;
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    background-image: url(../../assets/img/calculator.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #ffebde;
 }
 
 .abacus {
@@ -44,29 +41,6 @@ body {
     align-items: center;
 }
 
-.counter-container {
-    margin-top: 10px;
-    height: auto;
-    display: flex;
-    /* outline: 1px solid; */
-}
-
-.counter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    outline: 1px solid;
-    font-size: 30px;
-    font-family: 'IBM Plex Sans Hebrew', sans-serif;
-    background-color: transparent;
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
-}
-
 .bead {
     position: relative;
     border-radius: 50%;
@@ -77,11 +51,16 @@ body {
     transition: .5s ease-in-out;
 }
 
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
 .stick {
     position: absolute;
     width: 7px;
     border-radius: 5px;
-    ;
     /* outline:1px solid blue; */
     background-color: rgb(132, 132, 132);
     box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
