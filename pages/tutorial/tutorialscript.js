@@ -1,3 +1,4 @@
+//abacus variables
 const abacus = document.querySelector(".abacus");
 const numberOfColumns = 5;
 const beadsPerColumn = 10; // DO NOT CHANGE
@@ -5,7 +6,6 @@ const beadSize = 40; //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
 const columnWidth = beadSize + 10; //px
 const columnColors = ["limegreen", "red", "hotpink", "dodgerblue", "orange"];
-const DEFAULT_CELL_COLOR = "#fafafa";
 let gapPosition = [];
 //gapPosition[2] == 3 means the gap in the 2nd
 // column(zero-based index) is found on the 3rd row (zero-based index).
@@ -30,6 +30,18 @@ const instructionPara = document.querySelector("#instruction");
 //get paragraph where integer overflow warning will be entered.
 const warningPara = document.querySelector("#warning");
 let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
+
+const TRANSITION_DURATION = 200; //default 1000
+
+//user-input// numGrid variables
+let numGridPtr = numberOfColumns; //points to current column where addition must take place
+const DEFAULT_CELL_COLOR = "#fafafa";
+let currentNum2Digit;
+let currentNum1Digit;
+
+//auto-fill variables
+let carry = 0; //carry when performing addition
+let calculationOver = false; //is whole calulation + animation over?
 
 function ColumnOverflow(EnableErrorAnimation, currentColumnIndex) {
     //when a column counter is 10, this function is called with parameter true
@@ -139,11 +151,6 @@ function buildAbacus() {
 
     abacus.appendChild(abacusCounterContainer);
 }
-buildAbacus();
-buildNumGrid(); // num grid the grid which will accept user input
-
-const beads = document.querySelectorAll(".bead");
-const AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
 
 function getBeadIndex(bead) {
     //returns the row position of bead
@@ -162,6 +169,16 @@ function getColumnIndex(column) {
     let columnIndex = parseInt(relativeX / columnWidth);
     return columnIndex;
 }
+
+buildAbacus();
+buildNumGrid(); // num grid the grid which will accept user input
+
+//The following variables must be initialised AFTER abacus and numGrid have been built
+const beads = document.querySelectorAll(".bead");
+const AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
+const columnsArray = columnContainer.querySelectorAll(".column");
+const num1Cells = num1.querySelectorAll(".cell");
+const num2Cells = num2.querySelectorAll(".cell");
 
 function shiftGap(columnDiv, newGapPosition) {
     //shifts the gap in a specific column to a new position
@@ -210,18 +227,6 @@ function shiftGap(columnDiv, newGapPosition) {
 
     return AbacusChanged;
 }
-
-//implement abacus auto-fill
-const columnsArray = columnContainer.querySelectorAll(".column");
-const num1Cells = num1.querySelectorAll(".cell");
-const num2Cells = num2.querySelectorAll(".cell");
-const TIME_BETWEEN_AUTOFILL = 200; //default 1000
-
-let numGridPtr = num2Cells.length; //points to current column where addition must take place
-let currentNum2Digit;
-let currentNum1Digit;
-let carry = 0; //carry when performing addition
-let calculationOver = false; //is whole calulation + animation over?
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -310,7 +315,7 @@ async function showNewInstruction() {
 
     //skip instructions when num2cell is a 0.
     while (currentNum2Digit == 0) {
-        await sleep(TIME_BETWEEN_AUTOFILL);
+        await sleep(TRANSITION_DURATION);
         numGridPtr--;
         carry = 0;
         if (numGridPtr < 0) {
@@ -378,7 +383,7 @@ async function AnimateAutoFillAbacus() {
         let k = parseInt(num1Cells[columnIndex].value); //add k more beads in i-th column 
         newGapPosition = gapPosition[columnIndex] + k;
         shiftGap(columnsArray[columnIndex], newGapPosition);
-        await sleep(TIME_BETWEEN_AUTOFILL); //sleep between columns transition
+        await sleep(TRANSITION_DURATION); //sleep between columns transition
     }
 
     //autofill is over at this point
