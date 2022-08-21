@@ -1,17 +1,21 @@
 /* import font for abacus counter */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-:root{
+
+:root {
     --BEAD-SIZE: 40px;
 }
+
 body {
     background-image: url(../../assets/img/—Pngtree—hand\ drawn\ education\ math\ background_1176980.png);
     padding: 0;
+    background-color: #34425e;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;
@@ -19,40 +23,19 @@ body {
 
 .container {
     /* outline: 1px solid goldenrod; */
+    width: 60%;
     display: flex;
     height: auto;
-    gap: 5vw;
+    justify-content: space-between;
     /* background-color: #dce2d6; */
 }
 
-.assist-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    width: 500px;
-    /* outline: 5px solid red; */
-}
-
-.instructions-container {
-    font-family: 'Source Sans Pro', sans-serif;
-    /* width: 100%; */
-    height: 100%;
-    background-color: #e1f5fe;
-    font-size: 25px;
-    font-weight: 100;
-    padding-left: 10px;
-    /* outline: 3px solid blue; */
-}
-
-.instructions-container h1 {
-    margin: 0;
-}
-
-/* abacus css */
+/* Abacus starts here */
 .abacus {
     /* width: 250px; */
     display: flex;
     flex-direction: column;
+    align-self: center;
     /* outline:5px solid blue; */
 }
 
@@ -62,6 +45,30 @@ body {
     width: 100%;
     background-color: rgb(200, 152, 89);
     /* box-shadow: 0px 5px 3px rgb(99, 74, 42); */
+}
+
+.stick {
+    position: absolute;
+    width: 7px;
+    border-radius: 5px;
+    ;
+    /* outline:1px solid blue; */
+    background-color: rgb(132, 132, 132);
+    box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
+    z-index: -1;
+    /*place stick behind beads*/
+}
+
+.bead {
+    height: var(--BEAD-SIZE);
+    width: var(--BEAD-SIZE);
+    position: relative;
+    border-radius: 50%;
+    text-align: center;
+    font-size: large;
+    color: white;
+    box-shadow: inset -3px -2px 3px rgba(0, 0, 0, .5);
+    transition: .5s ease-in-out;
 }
 
 .column-container {
@@ -75,6 +82,31 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
+}
+/* Abacus ends here */
+
+.assist-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 500px;
+    /* outline: 5px solid red; */
+}
+
+.instructions-container {
+    font-family: 'Source Sans Pro', sans-serif;
+    /* width: 100%; */
+    height: 240px;
+    background-color: #e1f5fe;
+    font-size: 25px;
+    font-weight: 100;
+    padding-left: 10px;
+    /* outline: 3px solid blue; */
+}
+
+.instructions-container h1 {
+    margin: 0;
+    font-size: 35px;
 }
 
 .counter-container {
@@ -112,9 +144,13 @@ body {
 }
 
 .num1 p,
-.num2 p {
-    text-align: center;
-    /* width: 100px; */
+.num2 p,
+.mid p {
+    /* outline: 1px solid red; */
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
     font-size: 30px;
     font-family: 'Source Sans Pro', sans-serif;
 
@@ -151,37 +187,169 @@ textarea:focus {
     }
 }
 
-.bead {
-    height: var(--BEAD-SIZE);
-    width: var(--BEAD-SIZE);
-    position: relative;
-    border-radius: 50%;
-    text-align: center;
-    font-size: large;
-    color: white;
-    box-shadow: inset -3px -2px 3px rgba(0, 0, 0, .5);
-    transition: .5s ease-in-out;
+
+/* switch container  */
+.mid {
+    display: flex;
+    justify-content: space-between;
+    /* justify-content: center; */
+    /* outline: 1px solid red; */
 }
 
-.stick {
+/* Switch starts here */
+.rocker {
+    display: inline-block;
+    position: relative;
+    /*
+    SIZE OF SWITCH
+    ==============
+    All sizes are in em - therefore
+    changing the font-size here
+    will change the size of the switch.
+    See .rocker-small below as example.
+    */
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    color: #888;
+    width: 7em;
+    height: 4em;
+    overflow: hidden;
+    border-bottom: 0.5em solid #eee;
+}
+
+.rocker-small {
+    font-size: 0.75em;
+    /* Sizes the switch */
+    margin: 1em;
+}
+
+.rocker::before {
+    content: "";
     position: absolute;
-    width: 7px;
-    border-radius: 5px;
-    ;
-    /* outline:1px solid blue; */
-    background-color: rgb(132, 132, 132);
-    box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
-    z-index: -1;
-    /*place stick behind beads*/
+    top: 0.5em;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #999;
+    border: 0.5em solid #eee;
+    border-bottom: 0;
+}
+
+.rocker input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-left,
+.switch-right {
+    cursor: pointer;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5em;
+    width: 3em;
+    transition: 0.2s;
+}
+
+.switch-left {
+    height: 2.4em;
+    width: 2.75em;
+    left: 0.85em;
+    bottom: 0.4em;
+    background-color: #ddd;
+    transform: rotate(15deg) skewX(15deg);
+}
+
+.switch-right {
+    right: 0.5em;
+    bottom: 0;
+    background-color: #bd5757;
+    color: #fff;
+}
+
+.switch-left::before,
+.switch-right::before {
+    content: "";
+    position: absolute;
+    width: 0.4em;
+    height: 2.45em;
+    bottom: -0.45em;
+    background-color: #ccc;
+    transform: skewY(-65deg);
+}
+
+.switch-left::before {
+    left: -0.4em;
+}
+
+.switch-right::before {
+    right: -0.375em;
+    background-color: transparent;
+    transform: skewY(65deg);
+}
+
+input:checked+.switch-left {
+    background-color: #0084d0;
+    color: #fff;
+    bottom: 0px;
+    left: 0.5em;
+    height: 2.5em;
+    width: 3em;
+    transform: rotate(0deg) skewX(0deg);
+}
+
+input:checked+.switch-left::before {
+    background-color: transparent;
+    width: 3.0833em;
+}
+
+input:checked+.switch-left+.switch-right {
+    background-color: #ddd;
+    color: #888;
+    bottom: 0.4em;
+    right: 0.8em;
+    height: 2.4em;
+    width: 2.75em;
+    transform: rotate(-15deg) skewX(-15deg);
+}
+
+input:checked+.switch-left+.switch-right::before {
+    background-color: #ccc;
+}
+
+/* Keyboard Users */
+input:focus+.switch-left {
+    color: #333;
+}
+
+input:checked:focus+.switch-left {
+    color: #fff;
+}
+
+input:focus+.switch-left+.switch-right {
+    color: #fff;
+}
+
+input:checked:focus+.switch-left+.switch-right {
+    color: #333;
 }
 
 @media screen and (max-width:800px) {
 
-    :root{
+    :root {
         --BEAD-SIZE: 20px;
     }
+
+    body {
+        height: auto;
+    }
+
     .container {
-        margin-top: 100px;
+        margin-top: 150px;
         margin-bottom: 10px;
 
         flex-direction: column;
@@ -195,10 +363,15 @@ textarea:focus {
         /* flex-direction: row; */
         height: auto;
         width: 250px;
-        gap:2px;
+        gap: 2px;
     }
 
-    .cell, .counter {
+    .user-input {
+        gap: 0.2em;
+    }
+
+    .cell,
+    .counter {
         font-size: 20px;
         height: 22px;
 
@@ -211,29 +384,39 @@ textarea:focus {
     }
 
     .num1 p,
-    .num2 p {
+    .num2 p,
+    .mid p {
         font-size: 15px;
 
     }
-    #instruction, #warning{
+
+    #instruction,
+    #warning {
         font-size: 15px;
     }
+
     .instructions-container h1 {
         font-size: 18px;
     }
-    .instructions-container{
+
+    .instructions-container {
         height: 200px;
+    }
+
+    .rocker {
+        font-size: 0.6em;
     }
 }
 
 @media print {
-    .container{
+    .container {
         position: absolute;
-        top:0;
+        top: 0;
         right: 0;
-        }
+    }
+
     * {
-     -webkit-print-color-adjust: exact!important; 
-      print-color-adjust: exact!important;
-   }
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
