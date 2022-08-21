@@ -27,11 +27,13 @@ const num2 = document.querySelector(".num2");
 //get paragraph where instructions will be entered.
 const instructionPara = document.querySelector("#instruction");
 
-//get paragraph where integer overflow warning will be entered.
+//get paragraph where integer overflow/underflow warning will be entered.
 const warningPara = document.querySelector("#warning");
 let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
-
-const TRANSITION_DURATION = 200; //default 1000
+let columnUnderflowCount = 0; //number of columns in abacus currently underflowing
+const OVERFLOW_MESSAGE = "⚠ Add 1 bead to the blinking column's left neighbour, reset current blinking counter to 0, then keep counting.";
+const UNDERFLOW_MESSAGE = "⚠ Borrow 1 bead from the blinking column's left neighbour, reset current blinking counter to 10, then keep counting.";
+const TRANSITION_DURATION = 0; //default 1000
 
 //user-input// numGrid variables
 let numGridPtr = numberOfColumns; //points to current column where addition must take place
@@ -40,12 +42,14 @@ let currentNum2Digit;
 let currentNum1Digit;
 
 //auto-fill variables
-let carry = 0; //carry when performing addition
 let calculationOver = false; //is whole calulation + animation over?
+let AdditionOverflow =  false;
+let performAddition = false;
+let finalAnswer = "";
 
 function ColumnOverflow(EnableErrorAnimation, currentColumnIndex) {
     //when a column counter is 10, this function is called with parameter true
-
+    warningPara.textContent = OVERFLOW_MESSAGE;
     const currentColumn = AbacusCounterArray[currentColumnIndex];
     if (EnableErrorAnimation) {
         warningPara.style.display = "block";
@@ -148,7 +152,6 @@ function buildAbacus() {
     }
     abacus.appendChild(columnContainer);
     abacus.appendChild(bottomBar);
-
     abacus.appendChild(abacusCounterContainer);
 }
 
@@ -180,6 +183,20 @@ const columnsArray = columnContainer.querySelectorAll(".column");
 const num1Cells = num1.querySelectorAll(".cell");
 const num2Cells = num2.querySelectorAll(".cell");
 
+
+
+function columnUnderflow(EnableErrorAnimation, currentColumnIndex) {
+    warningPara.textContent = UNDERFLOW_MESSAGE;
+    const currentColumn = AbacusCounterArray[currentColumnIndex];
+    if (EnableErrorAnimation) {
+        warningPara.style.display = "block";
+        currentColumn.classList.add("error-animation");
+    } else {
+        warningPara.style.display = "none";
+        currentColumn.classList.remove("error-animation");
+    }
+
+}
 function shiftGap(columnDiv, newGapPosition) {
     //shifts the gap in a specific column to a new position
     //returns true if at least 1 bead changed position
@@ -214,11 +231,13 @@ function shiftGap(columnDiv, newGapPosition) {
     //update gap position
     gapPosition[currentColumnIndex] = newGapPosition;
 
-    //show overflow animation if column has 10 used beads
-    if (newGapPosition == beadsPerColumn) {
-        ColumnOverflow(true, currentColumnIndex);
-    } else {
-        ColumnOverflow(false, currentColumnIndex);
+    //for additiona, show overflow animation if column has 10 used beads
+    if (performAddition) {
+        if (newGapPosition == beadsPerColumn) {
+            ColumnOverflow(true, currentColumnIndex);
+        } else {
+            ColumnOverflow(false, currentColumnIndex);
+        }
     }
 
     //update abacus counter for current column
@@ -252,9 +271,6 @@ function resetAll() {
     //reset instruction-container
     instructionPara.textContent = "";
 
-    //reset carry 
-    carry = 0;
-
     let AbacusChanged = false;
     //place gap at top in each column
     columnsArray.forEach(column => {
@@ -266,21 +282,83 @@ function resetAll() {
 }
 
 function showgameOverInstruction() {
-    let firstAbacusCounter = AbacusCounterArray[0]; //left-most counter
-    if (carry == 0 && firstAbacusCounter.textContent != "10")
+    if (performAddition) {
+        if(AdditionOverflow){
+            instructionPara.textContent = `Integer overflow 👎`;
+        }else{
+            instructionPara.textContent = `Done ! 👍`;
+        }
+    } else { //for subtraction
         instructionPara.textContent = `Done ! 👍`;
-    else
-        instructionPara.textContent = `Integer overflow 👎`;
+    }
+
 }
 
+
+function num1Greaternum2() {
+    //returns true if num1 is greater than num2
+    for (let i = 0; i < numberOfColumns; i++) {
+        let num1value = parseInt(num1Cells[i].value);
+        let num2value = parseInt(num2Cells[i].value);
+        if (num1value == num2value) continue;
+        if (num1value < num2value) return false;
+        return true;
+    }
+    return true;
+}
+
+function calculateFinalAnswer(){
+    //can use a single loop to obtain n1 and n2
+    let n1 = "";
+    num1Cells.forEach(cell=>{
+        n1 += cell.value;
+    })
+    n1 = parseInt(n1);
+
+    let n2 = "";
+    num2Cells.forEach(cell=>{
+        n2 += cell.value;
+    })
+    n2 = parseInt(n2);
+
+    if(performAddition){
+        finalAnswer = n1+n2;
+    }else{
+        finalAnswer = n1-n2;
+    }
+    finalAnswer = finalAnswer.toString();
+    while(finalAnswer.length <  numberOfColumns){
+        finalAnswer = "0"+ finalAnswer;
+    }
+    console.log("Final answer is ", finalAnswer);
+
+    //if overflow will occur
+    if(finalAnswer.length !=  numberOfColumns){
+        finalAnswer = finalAnswer.slice(1); //remove first char to make finalAnswer of size numberOfColumns
+        AdditionOverflow = true;
+    }
+    console.log("Final answer is ", finalAnswer);
+}
 function EnableComputerAssistance(event) {
     if (event.code == "Enter") {//enter key pressed
+
+        console.log("num1>=num2:", num1Greaternum2());
 
         //check if all user input is valid
         let allCells = cellContainer.querySelectorAll(".cell");
         for (cell of allCells) {
             if (cell.classList.contains("error-animation")) return;
         }
+        //for subtraction, check if num1>= num2
+        if (!performAddition) {
+            if (!num1Greaternum2()) {
+                instructionPara.textContent = " Obey 👉 num1 ≥ num2";
+                return;
+            }
+        }
+
+        AdditionOverflow = false;
+        calculateFinalAnswer();
 
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
@@ -301,7 +379,7 @@ function EnableComputerAssistance(event) {
     }
 }
 
-async function showNewInstruction() {
+async function showNextInstruction() {
     if (numGridPtr == 0) { // all columns in num grid have been processed
         calculationOver = true;
         showgameOverInstruction();
@@ -310,14 +388,12 @@ async function showNewInstruction() {
     numGridPtr--;
     num2Cells[numGridPtr].style.backgroundColor = columnColors[numGridPtr];
 
-    currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
     currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
     //skip instructions when num2cell is a 0.
     while (currentNum2Digit == 0) {
         await sleep(TRANSITION_DURATION);
         numGridPtr--;
-        carry = 0;
         if (numGridPtr < 0) {
             calculationOver = true;
             showgameOverInstruction();
@@ -327,11 +403,21 @@ async function showNewInstruction() {
         currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
     }
-    if (currentNum2Digit == 1) { //"bead" 
-        instructionPara.textContent = `Move ${[currentNum2Digit]} bead upwards in ${columnColors[numGridPtr]} column.`;
-    } else { //"beads" 
-        instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[numGridPtr]} column.`;
+    if (performAddition) {
+        if (currentNum2Digit == 1) { //"bead" 
+            instructionPara.textContent = `Move ${[currentNum2Digit]} bead upwards in ${columnColors[numGridPtr]} column.`;
+        } else { //"beads" 
+            instructionPara.textContent = `Move ${[currentNum2Digit]} beads upwards in ${columnColors[numGridPtr]} column.`;
+        }
     }
+    else { //subtraction
+        if (currentNum2Digit == 1) { //"bead" 
+            instructionPara.textContent = `Move ${[currentNum2Digit]} bead downwards in ${columnColors[numGridPtr]} column.`;
+        } else { //"beads" 
+            instructionPara.textContent = `Move ${[currentNum2Digit]} beads downwards in ${columnColors[numGridPtr]} column.`;
+        }
+    }
+
 }
 function UserFillAbacus(e) {
     //move beads as per user's click
@@ -347,6 +433,7 @@ function UserFillAbacus(e) {
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
     let clickedColumnIndex = getColumnIndex(clickedColumn);
 
+    //prevent user from using abacus when calculation is over
     if (calculationOver) return;
 
     shiftGap(clickedColumn, clickedBeadIndex);
@@ -356,15 +443,18 @@ function UserFillAbacus(e) {
         currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
         currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
-        let expectedCounterDigit = (currentNum1Digit + currentNum2Digit + carry) % beadsPerColumn;
+        let expectedCounterDigit = parseInt(finalAnswer[numGridPtr]);
         let currentCounterDigit = parseInt(AbacusCounterArray[numGridPtr].textContent);
 
-        //check if user correctly made the correct move
         if (currentCounterDigit == expectedCounterDigit) {
-            //calculate carry for next column
-            carry = Math.floor((currentNum2Digit + currentNum1Digit + carry) / beadsPerColumn);
-
-            showNewInstruction();
+            if(!performAddition){ //for subtraction
+                // if(currentNum1Digit<currentNum2Digit){
+                //     columnUnderflow(true, clickedColumnIndex);
+                // }else{
+                //     columnUnderflow(false, clickedColumnIndex);
+                // }
+            }
+            showNextInstruction();
         }
 
         //enable event listeners
@@ -392,11 +482,26 @@ async function AnimateAutoFillAbacus() {
     document.addEventListener("keydown", EnableComputerAssistance);
 
     // show first instruction
-    showNewInstruction();
+    showNextInstruction();
 
     //re-allow user to click beads
     beads.forEach(bead => {
         bead.addEventListener("click", UserFillAbacus);
     });
 }
+function fillNumGrid(num1, num2){
+    //num1 and num2 are strings of size 5
+
+    for(let i =numberOfColumns-1;i>=0;i--){
+        num1Cells[i].value = num1[i];
+        num2Cells[i].value = num2[i];
+    }
+}
+//if performing subtraction, num1>=2 num2
+if (!performAddition) {
+    instructionPara.textContent = "Fill num1 and num2 where num1 ≥ num2 then press Enter key."
+}
+// fillNumGrid("00015","00006");
+fillNumGrid("01002","00009");
+
 document.addEventListener("keydown", EnableComputerAssistance);
