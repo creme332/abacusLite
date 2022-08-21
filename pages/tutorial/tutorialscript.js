@@ -26,7 +26,7 @@ const num2 = document.querySelector(".num2");
 
 //get paragraph where instructions will be entered.
 const instructionPara = document.querySelector("#instruction");
-
+const DEFAULT_INSTRUCTION = "Fill num1 and num2, where num1 ≥ num2, then press Enter key.";
 //get paragraph where integer overflow/underflow warning will be entered.
 const warningPara = document.querySelector("#warning");
 let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
@@ -43,7 +43,7 @@ let currentNum1Digit;
 
 //auto-fill variables
 let calculationOver = false; //is whole calulation + animation over?
-let AdditionOverflow =  false;
+let AdditionOverflow = false;
 let performAddition = false;
 let finalAnswer = "";
 
@@ -176,18 +176,19 @@ function getColumnIndex(column) {
 buildAbacus();
 buildNumGrid(); // num grid the grid which will accept user input
 
+const columnsArray = columnContainer.querySelectorAll(".column");
+
 //The following variables must be initialised AFTER abacus and numGrid have been built
 const beads = document.querySelectorAll(".bead");
 const AbacusCounterArray = abacusCounterContainer.querySelectorAll(".counter");
-const columnsArray = columnContainer.querySelectorAll(".column");
 const num1Cells = num1.querySelectorAll(".cell");
 const num2Cells = num2.querySelectorAll(".cell");
 
 
-function disableNumGrid(disableCells){
+function disableNumGrid(disableCells) {
     //disableNumGrid==true : user cannot edit cells
 
-    for(let i=0;i<numberOfColumns;i++){
+    for (let i = 0; i < numberOfColumns; i++) {
         num1Cells[i].disabled = disableCells;
         num2Cells[i].disabled = disableCells;
     }
@@ -292,9 +293,9 @@ function resetAll() {
 
 function showgameOverInstruction() {
     if (performAddition) {
-        if(AdditionOverflow){
+        if (AdditionOverflow) {
             instructionPara.textContent = `Integer overflow 👎`;
-        }else{
+        } else {
             instructionPara.textContent = `Done ! 👍`;
         }
     } else { //for subtraction
@@ -316,33 +317,33 @@ function num1Greaternum2() {
     return true;
 }
 
-function calculateFinalAnswer(){
+function calculateFinalAnswer() {
     //can use a single loop to obtain n1 and n2
     let n1 = "";
-    num1Cells.forEach(cell=>{
+    num1Cells.forEach(cell => {
         n1 += cell.value;
     })
     n1 = parseInt(n1);
 
     let n2 = "";
-    num2Cells.forEach(cell=>{
+    num2Cells.forEach(cell => {
         n2 += cell.value;
     })
     n2 = parseInt(n2);
 
-    if(performAddition){
-        finalAnswer = n1+n2;
-    }else{
-        finalAnswer = n1-n2;
+    if (performAddition) {
+        finalAnswer = n1 + n2;
+    } else {
+        finalAnswer = n1 - n2;
     }
     finalAnswer = finalAnswer.toString();
-    while(finalAnswer.length <  numberOfColumns){
-        finalAnswer = "0"+ finalAnswer;
+    while (finalAnswer.length < numberOfColumns) {
+        finalAnswer = "0" + finalAnswer;
     }
     console.log("Final answer is ", finalAnswer);
 
     //if overflow will occur
-    if(finalAnswer.length !=  numberOfColumns){
+    if (finalAnswer.length != numberOfColumns) {
         finalAnswer = finalAnswer.slice(1); //remove first char to make finalAnswer of size numberOfColumns
         AdditionOverflow = true;
     }
@@ -371,6 +372,11 @@ function EnableComputerAssistance(event) {
 
         AdditionOverflow = false;
         calculateFinalAnswer();
+
+        //prevent change of operation
+        checkbox.removeEventListener("click",()=>{
+            performAddition = checkbox.checked;
+        });
 
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
@@ -452,8 +458,8 @@ function UserFillAbacus(e) {
     abacus.addEventListener("transitionend", () => {
         currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
         currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
-        if(!performAddition){ //for subtraction
-            if(currentNum1Digit<currentNum2Digit){
+        if (!performAddition) { //for subtraction
+            if (currentNum1Digit < currentNum2Digit) {
                 columnUnderflow(true, numGridPtr);
             }
         }
@@ -461,11 +467,10 @@ function UserFillAbacus(e) {
         let currentCounterDigit = parseInt(AbacusCounterArray[numGridPtr].textContent);
 
         if (currentCounterDigit == expectedCounterDigit) {
-            if(!performAddition)columnUnderflow(false, numGridPtr);
+            if (!performAddition) columnUnderflow(false, numGridPtr);
             showNextInstruction();
         }
 
-        //enable event listeners
         beads.forEach(bead => {
             bead.addEventListener("click", UserFillAbacus);
         });
@@ -489,14 +494,19 @@ async function AnimateAutoFillAbacus() {
     //re-allow user to restart if needed.
     document.addEventListener("keydown", EnableComputerAssistance);
 
+    //allow change of operation
+    checkbox.addEventListener("click",()=>{
+        performAddition = checkbox.checked;
+    });
+
     // show first instruction
     showNextInstruction();
 
     currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
     currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
 
-    if(!performAddition){ //for subtraction
-        if(currentNum1Digit<currentNum2Digit){
+    if (!performAddition) { //for subtraction
+        if (currentNum1Digit < currentNum2Digit) {
             columnUnderflow(true, numGridPtr);
         }
     }
@@ -506,19 +516,24 @@ async function AnimateAutoFillAbacus() {
         bead.addEventListener("click", UserFillAbacus);
     });
 }
-function fillNumGrid(num1, num2){
+function fillNumGrid(num1, num2) {
     //num1 and num2 are strings of size 5
 
-    for(let i =numberOfColumns-1;i>=0;i--){
+    for (let i = numberOfColumns - 1; i >= 0; i--) {
         num1Cells[i].value = num1[i];
         num2Cells[i].value = num2[i];
     }
 }
 //if performing subtraction, num1>=2 num2
 if (!performAddition) {
-    instructionPara.textContent = "Fill num1 and num2 where num1 ≥ num2 then press Enter key."
+    instructionPara.textContent = DEFAULT_INSTRUCTION;
 }
 // fillNumGrid("00015","00006");
-fillNumGrid("01002","00009");
+fillNumGrid("01002", "00009");
 
+let checkbox = document.querySelector("#operation");
+checkbox.addEventListener("click",()=>{
+    performAddition = checkbox.checked;
+    console.log(performAddition);
+});
 document.addEventListener("keydown", EnableComputerAssistance);
