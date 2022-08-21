@@ -31,8 +31,8 @@ const instructionPara = document.querySelector("#instruction");
 const warningPara = document.querySelector("#warning");
 let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
 let columnUnderflowCount = 0; //number of columns in abacus currently underflowing
-const OVERFLOW_MESSAGE = "⚠ Add 1 bead to the blinking column's left neighbour, reset current blinking counter to 0, then keep counting.";
-const UNDERFLOW_MESSAGE = "⚠ Borrow 1 bead from the blinking column's left neighbour, reset current blinking counter to 10, then keep counting.";
+const OVERFLOW_MESSAGE = "⚠ Add 1 bead to the current column's left neighbour, reset current counter to 0, then keep counting.";
+const UNDERFLOW_MESSAGE = "⚠ Subtract 1 bead from current column's nearest non-zero left neighbour, reset current counter to 10, then keep counting.";
 const TRANSITION_DURATION = 0; //default 1000
 
 //user-input// numGrid variables
@@ -184,7 +184,14 @@ const num1Cells = num1.querySelectorAll(".cell");
 const num2Cells = num2.querySelectorAll(".cell");
 
 
+function disableNumGrid(disableCells){
+    //disableNumGrid==true : user cannot edit cells
 
+    for(let i=0;i<numberOfColumns;i++){
+        num1Cells[i].disabled = disableCells;
+        num2Cells[i].disabled = disableCells;
+    }
+}
 function columnUnderflow(EnableErrorAnimation, currentColumnIndex) {
     warningPara.textContent = UNDERFLOW_MESSAGE;
     const currentColumn = AbacusCounterArray[currentColumnIndex];
@@ -261,11 +268,13 @@ function resetAll() {
     num1Cells.forEach(cell => {
         cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     });
+
     //reset color of num2 cells
     num2Cells.forEach(cell => {
         cell.style.backgroundColor = DEFAULT_CELL_COLOR;
     });
-    //reset column pointer for num2
+
+    //reset column pointer
     numGridPtr = num2Cells.length;
 
     //reset instruction-container
@@ -357,17 +366,18 @@ function EnableComputerAssistance(event) {
             }
         }
 
+        //reset abacus beads, colors, ...
+        let AbacusChanged = resetAll();
+
         AdditionOverflow = false;
         calculateFinalAnswer();
 
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
 
-        //reset abacus beads
-        let AbacusChanged = resetAll();
-
         //update instruction 
         instructionPara.textContent = "Auto-filling abacus for num1 ..."
+
         if (AbacusChanged) {
             //wait for bead transitions to be over 
             abacus.addEventListener("transitionend", e => {
@@ -442,18 +452,16 @@ function UserFillAbacus(e) {
     abacus.addEventListener("transitionend", () => {
         currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
         currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
-
+        if(!performAddition){ //for subtraction
+            if(currentNum1Digit<currentNum2Digit){
+                columnUnderflow(true, numGridPtr);
+            }
+        }
         let expectedCounterDigit = parseInt(finalAnswer[numGridPtr]);
         let currentCounterDigit = parseInt(AbacusCounterArray[numGridPtr].textContent);
 
         if (currentCounterDigit == expectedCounterDigit) {
-            if(!performAddition){ //for subtraction
-                // if(currentNum1Digit<currentNum2Digit){
-                //     columnUnderflow(true, clickedColumnIndex);
-                // }else{
-                //     columnUnderflow(false, clickedColumnIndex);
-                // }
-            }
+            if(!performAddition)columnUnderflow(false, numGridPtr);
             showNextInstruction();
         }
 
@@ -478,11 +486,20 @@ async function AnimateAutoFillAbacus() {
 
     //autofill is over at this point
 
-    //re-allow user to call computerAssitance to reset if needed.
+    //re-allow user to restart if needed.
     document.addEventListener("keydown", EnableComputerAssistance);
 
     // show first instruction
     showNextInstruction();
+
+    currentNum1Digit = parseInt(num1Cells[numGridPtr].value);
+    currentNum2Digit = parseInt(num2Cells[numGridPtr].value);
+
+    if(!performAddition){ //for subtraction
+        if(currentNum1Digit<currentNum2Digit){
+            columnUnderflow(true, numGridPtr);
+        }
+    }
 
     //re-allow user to click beads
     beads.forEach(bead => {
