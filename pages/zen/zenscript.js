@@ -4,6 +4,12 @@ const beadsPerColumn = 10; // DO NOT CHANGE
 let beadSize = 40; //px
 let columnWidth = beadSize + 10; //px
 
+const ballCollisionSound = document.getElementById("ball-collision");
+const bgMusic = document.getElementById("bg-music");
+bgMusic.volume = 0.1;
+
+ballCollisionSound.volume = 0.2;
+
 const vw = document.documentElement.clientWidth;
 if(vw<740){
     numberOfColumns = 7;
@@ -82,6 +88,8 @@ function getColumnIndex(column) {
 }
 
 function shiftGapPosition(columnDiv, newGapPosition) {
+    ballCollisionSound.play();
+    ballCollisionSound.currentTime = 0;
     //shifts the gap in a specific column to a new position
 
     let currentColumnIndex = getColumnIndex(columnDiv); //left-most column has index 0
@@ -130,6 +138,9 @@ function displaceBead(e){
     }, { once: true });
 }
 
+document.addEventListener("click",()=>{
+    bgMusic.play();
+});
 //displace beads onclick
 beads.forEach(bead => {
     bead.addEventListener("click", displaceBead);
