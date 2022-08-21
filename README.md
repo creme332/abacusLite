@@ -16,7 +16,7 @@ An interactive abacus to help you master the abacus.
 - Simple UI.
 
 ## Tutorial mode 
-Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations.
+Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations (addition and subtraction).
 
 - Input validation.
 - Auto-fill feature.
@@ -38,20 +38,20 @@ Use the classic abacus.
 # 📌 Attributions
 Resource | Source
 ---|---
-resource| owner
-<a href='https://pngtree.com/so/Hand'>Hand png from pngtree.com/</a>
-https://pngtree.com/freebackground/hand-drawn-education-math-background_1176980.html
+All images in `assets/img` | pngtree
+Background music in zen mode | black coffee by elijah who
+Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
 # 🕓 History
 
 # 🔨 To-Do
 - [ ] Add sitemap.
-- [ ] Tutorial mode : Prevent user from clicking beads in a correct abacus column.
 - [ ] Add a diagram showing skeleton and class names.
 - [ ] Implement rush mode.
 - [ ] Identify and remove unused css.
-- [ ] Add sound effects to zen mode.
+
 
 ### ✔ Done
+- [x] Add sound effects to zen mode.
 - [x] Make website print-friendly.
 - [x] Fix merging beads glitch in zen mode.
 - [x] Add explanation when overflow occurs.
