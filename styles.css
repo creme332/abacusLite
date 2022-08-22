@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
 
-html, body {
+html,
+body {
     width: 100%;
 }
 
-body{
-    overflow-x:hidden;  
+body {
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
     color: white;
@@ -13,10 +14,11 @@ body{
     background-color: red;
 
 }
-.top-section{
+
+.top-section {
     display: flex;
     flex-direction: column;
-    gap:5em;
+    gap: 5em;
     height: 700px;
     width: 100%;
     margin-top: 0;
@@ -25,38 +27,42 @@ body{
 }
 
 /* start of header styles  */
-.header{
+.header {
     padding-right: 50px;
     display: flex;
     /* outline:5px solid; */
     justify-content: flex-end;
 }
-.header ul{
+
+.header ul {
     margin: 10px;
     list-style-type: none;
     display: flex;
-    gap :5em;
-    /* width: 30%; */
+    gap: 5em;
     justify-content: space-between;
     /* outline:3px solid blue; */
 }
-.header ul li{
+
+.header ul li {
     font-size: 30px;
     /* outline:1px solid red; */
-    padding:5px;
+    padding: 5px;
     font-weight: 550;
 }
-.header ul li:hover{
+
+.header ul li:hover {
     outline: 1px solid;
-    border-radius:10px;
+    border-radius: 10px;
 }
-.header ul li a{
+
+.header ul li a {
     color: white;
     text-decoration: none;
 }
+
 /* end of header styles  */
 
-.text-container{
+.text-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -66,61 +72,67 @@ body{
     /* outline:1px solid red; */
 }
 
-.text-container h1{
+.text-container h1 {
     font-weight: 800;
     font-size: 60px;
 }
-.text-container p{
+
+.text-container p {
+    word-wrap: break-word;
     text-align: center;
     font-size: 30px;
 }
 
-.container{
+.container {
     /* outline: 1px solid ; */
     display: flex;
     padding-left: 50px;
 }
 
-.container ul{
+.container ul {
     font-size: 30px;
 }
-svg {
-    width:  auto;
-    height: auto;
-}
-.img-container{
+
+/* svg image css starts */
+.img-container {
+    /* outline:2px solid green; */
     width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.main-content{
+/* svg image css ends  */
+
+.main-content {
     height: auto;
     background-color: white;
 }
 
-.main-content .container{
+.main-content .container {
     height: 700px;
     width: auto;
 
 }
 
-.main-content .container{
+.main-content .container {
     color: black;
 }
-.main-content .container:nth-child(1){
+
+.main-content .container:nth-child(1) {
     background-color: white;
 }
-.main-content .container:nth-child(2){
+
+.main-content .container:nth-child(2) {
     background-color: rgb(195, 195, 253);
 }
-.main-content .container:nth-child(3){
+
+.main-content .container:nth-child(3) {
     background-color: rgb(195, 250, 253);
 }
 
 /* Button styles start here */
-.text-container button{
+.text-container button {
     font-family: 'Nunito', sans-serif;
     font-weight: 700;
     padding: 10px;
@@ -129,9 +141,10 @@ svg {
     background-color: transparent;
 
 }
+
 /* Button styles end here */
 
-.footer{
+.footer {
     color: black;
     font-family: 'Nunito', sans-serif;
     font-size: 18px;
@@ -142,56 +155,78 @@ svg {
     padding-left: 30px;
     background-color: rgb(225, 225, 225);
 }
-.footer a{
+
+.footer a {
     color: black;
 }
 
 @media screen and (max-width:1115px) {
-    .header{
-        padding-right: 0;
-        justify-content: center;
-    }
-    .header ul{
-        gap :0.55em;
-        justify-content: space-between;
-    }
-    .header ul li{
-        font-size: 20px;
-        padding:5px;
-    }
-
-    .text-container h1{
-        font-size: 35px;
-    }
-    .text-container p, .container ul, .text-container button{
-        font-size: 20px;
-        text-align: left;
-    }
-
-    .text-container button{
-        height: auto;
-        width: auto;
-        padding: 5px;    
-    }
-
-    .top-section{
-        height: auto;
-    }
-    .container{
-        flex-direction: column;
-        padding-left: 10px;
-    }
-
-    .main-content .container{
+    .top-section {
         height: auto;
         width: 100%;
     }
 
-    .footer{
+    .header {
+        padding-right: 0;
+        justify-content: center;
+    }
+
+    .header ul {
+        gap: 0.55em;
+        justify-content: space-between;
+    }
+
+    .header ul li {
+        font-size: 20px;
+        padding: 5px;
+    }
+
+    .text-container {
+        padding: 5px;
+    }
+
+    .text-container h1 {
+        font-size: 35px;
+    }
+
+    .text-container p,
+    .container ul,
+    .text-container button {
+        font-size: 20px;
+        text-align: left;
+    }
+
+    .text-container button {
+        height: auto;
+        width: auto;
+        padding: 5px;
+    }
+
+    .container {
+        flex-direction: column;
+        padding-left: 10px;
+        align-items: center;
+        /* justify-content: center; */
+    }
+
+    svg {
+        width: 200px;
+        height: 200px;
+    }
+
+    .img-container {
+        width: 30%;
+    }
+
+    .main-content .container {
+        height: auto;
+        width: 100%;
+    }
+
+    .footer {
         font-size: 12px;
         padding: 10px;
         padding-left: 30px;
-        background-color: rgb(225, 225, 225);
     }
-    
+
 }
