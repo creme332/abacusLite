@@ -41,8 +41,11 @@ Resource | Source
 All images in `assets/img` | pngtree
 Background music in zen mode | black coffee by elijah who
 Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
+3D image on homepage | SALY 3D-Illustration-Pack from Figma
 # 🕓 History
-
+![homepage](2022-08-22-16-12-22.png)
+![tutorial mode](2022-08-22-16-13-51.png)
+![zen mode](2022-08-22-16-14-37.png)
 # 🔨 To-Do
 - [ ] Add sitemap.
 - [ ] Add a diagram showing skeleton and class names.
@@ -67,4 +70,4 @@ Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
 Bug | How to reproduce | How to fix | Fixed
 ---|---|---|---|
 Create more than 1 gap in a single column by merging beads ![](assets/beadglitch.gif)| While bead A is moving up, quickly click on bead B to cause bead B to move down. Both A and  B will merge. | Must prevent 2 beads in the same column from moving in opposite directions.  Might have to use `transitionend` event listeners.|✅
-Empty space on right when browser is resized ![](assets/2022-08-22-14-30-56.png)|x|review padding, margin, svg image container size, ... | ❌
+Empty space on right when browser is resized ![empty space on resizing glitch](assets/2022-08-22-14-30-56.png)|x|review padding, margin, svg image container size, ... | ❌
