@@ -1,22 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+
+html, body {
+    width: 100%;
+}
+
 body{
+    overflow-x:hidden;  
     margin: 0;
     padding: 0;
     color: white;
     font-family: 'Nunito', sans-serif;
+    background-color: red;
 
 }
 .top-section{
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
     gap:5em;
-    height: 100vh;
-    /* width: auto; */
+    height: 700px;
+    width: 100%;
     margin-top: 0;
+
     background-color: #222831;
 }
 
+/* start of header styles  */
 .header{
     padding-right: 50px;
     display: flex;
@@ -46,6 +54,8 @@ body{
     color: white;
     text-decoration: none;
 }
+/* end of header styles  */
+
 .text-container{
     display: flex;
     flex-direction: column;
@@ -65,16 +75,6 @@ body{
     font-size: 30px;
 }
 
-.text-container button{
-    font-family: 'Nunito', sans-serif;
-    /* height: 100px; */
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 30px;
-    background-color: transparent;
-
-}
-
 .container{
     /* outline: 1px solid ; */
     display: flex;
@@ -83,35 +83,115 @@ body{
 
 .container ul{
     font-size: 30px;
-
+}
+svg {
+    width:  auto;
+    height: auto;
 }
 .img-container{
+    width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .main-content{
-    height: 100vh;
+    height: auto;
     background-color: white;
 }
 
 .main-content .container{
-    height: 100vh;
+    height: 700px;
+    width: auto;
 
+}
+
+.main-content .container{
+    color: black;
 }
 .main-content .container:nth-child(1){
+    background-color: white;
+}
+.main-content .container:nth-child(2){
     background-color: rgb(195, 195, 253);
-    color: black;
-
-}
-.main-content .container:nth-child(2) .text-container{
-    color: black;
-}
-
-.main-content .container:nth-child(3) .text-container{
-    color: black;
 }
 .main-content .container:nth-child(3){
     background-color: rgb(195, 250, 253);
+}
+
+/* Button styles start here */
+.text-container button{
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 30px;
+    background-color: transparent;
+
+}
+/* Button styles end here */
+
+.footer{
+    color: black;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    padding-left: 30px;
+    background-color: rgb(225, 225, 225);
+}
+.footer a{
+    color: black;
+}
+
+@media screen and (max-width:1115px) {
+    .header{
+        padding-right: 0;
+        justify-content: center;
+    }
+    .header ul{
+        gap :0.55em;
+        justify-content: space-between;
+    }
+    .header ul li{
+        font-size: 20px;
+        padding:5px;
+    }
+
+    .text-container h1{
+        font-size: 35px;
+    }
+    .text-container p, .container ul, .text-container button{
+        font-size: 20px;
+        text-align: left;
+    }
+
+    .text-container button{
+        height: auto;
+        width: auto;
+        padding: 5px;    
+    }
+
+    .top-section{
+        height: auto;
+    }
+    .container{
+        flex-direction: column;
+        padding-left: 10px;
+    }
+
+    .main-content .container{
+        height: auto;
+        width: 100%;
+    }
+
+    .footer{
+        font-size: 12px;
+        padding: 10px;
+        padding-left: 30px;
+        background-color: rgb(225, 225, 225);
+    }
+    
 }
