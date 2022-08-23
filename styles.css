@@ -13,6 +13,8 @@ body {
     font-family: 'Nunito', sans-serif;
     background-color: red;
 
+    display: flex;
+    flex-direction: column;
 }
 
 .top-section {
@@ -105,7 +107,11 @@ body {
 /* svg image css ends  */
 
 .main-content {
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    /* flex-grow: 1; */
+    /* height: 100%; */
+    /* outline:10px solid green; */
     background-color: white;
 }
 
@@ -149,11 +155,14 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 18px;
     text-align: center;
-    width: 100%;
-    height: auto;
+    /* width: 100%; */
+
     padding: 10px;
     padding-left: 30px;
     background-color: rgb(225, 225, 225);
+
+    flex-grow: 1;
+
 }
 
 .footer a {
@@ -224,6 +233,7 @@ body {
     }
 
     .footer {
+        height: auto;
         font-size: 12px;
         padding: 10px;
         padding-left: 30px;
