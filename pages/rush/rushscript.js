@@ -159,6 +159,7 @@ let TIME_LEFT = START_TIME;
 const timer = document.querySelector("#timer");
 const submitButton = document.querySelector("#submitbtn");
 const questionBox = document.querySelector("#question");
+const scoreVal = document.querySelector("#score-value");
 
 timer.textContent = TIME_LEFT;
 const ONE_SECOND = 1000; //1000 ms  = 1s
@@ -183,11 +184,10 @@ async function startTimer() {
     questionBox.textContent = "Game over ⛔ Restart game ☝";
     TIME_LEFT = START_TIME;
     timer.textContent = TIME_LEFT;
-    timer.addEventListener("click", startTimer);
+    timer.addEventListener("click", startGame);
 }
 
 function updatePlayerScore(correctAnswer) {
-    const scoreVal = document.querySelector("#score-value");
     if(correctAnswer){
         playerScore+=100;
     }else{
@@ -205,8 +205,10 @@ function getUserAnswer() {
     return parseInt(userAnswer);
 }
 function startGame() {
+    timer.removeEventListener("click", startGame);
     gameOver = false;
     playerScore = 0;
+    scoreVal.textContent = playerScore;
     generateQuestion();
     startTimer();
 
@@ -246,4 +248,4 @@ function generateQuestion() {
     expectedAnswer = eval(questionBox.textContent);
     console.log(expectedAnswer);
 }
-timer.addEventListener("click", startGame, {once:true});
+timer.addEventListener("click", startGame);
