@@ -6,15 +6,17 @@
     --BEAD-SIZE: 40px;
 }
 
-body {
-    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqnAaVmNol8e1zhsXKqPNbkaJZvP0DdKvWOw&usqp=CAU);
+html, body {
+    margin: 0;
     height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+}
 
+body {
+    background: #D3CCE3;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #E9E4F0, #D3CCE3);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #E9E4F0, #D3CCE3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    margin-top:5px;
     padding: 0;
-    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,12 +104,12 @@ body {
 }
 
 .correct-answer {
-    background-color: green;
+    color: green;
     transition: .2s;
 }
 
 .wrong-answer {
-    background-color: red;
+    color: red;
     transition: .2s;
 }
 /* submit button ends here  */
