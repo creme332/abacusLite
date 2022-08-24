@@ -1,6 +1,6 @@
 //abacus variables
 const abacus = document.querySelector(".abacus");
-const numberOfColumns = 5;
+const numberOfColumns = 10;
 const beadsPerColumn = 10; // DO NOT CHANGE
 const beadSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--BEAD-SIZE')); //px
 const columnHeight = beadSize * (beadsPerColumn + 1); //px
@@ -132,7 +132,7 @@ function shiftGap(columnDiv, newGapPosition) {
     currentCounter.textContent = newGapPosition;
 }
 
-function displaceBead(e){
+function displaceBead(e) {
     //disable event listener for all beads 
     beads.forEach(bead => {
         bead.removeEventListener("click", displaceBead);
@@ -141,7 +141,7 @@ function displaceBead(e){
     let clickedBead = e.target;
     let clickedColumn = clickedBead.parentNode; //column containing clicked bead
     let clickedBeadIndex = getBeadIndex(clickedBead); //position of clicked bead in clickedColumn. top-most position is index 0.
-    shiftGap(clickedColumn,clickedBeadIndex);
+    shiftGap(clickedColumn, clickedBeadIndex);
 
     //when bead displacement animation is over, re-enable event listeners for beads.
     beads.forEach(bead => {
@@ -153,3 +153,97 @@ function displaceBead(e){
 beads.forEach(bead => {
     bead.addEventListener("click", displaceBead);
 });
+
+const START_TIME = 5; //in seconds
+let TIME_LEFT = START_TIME; 
+const timer = document.querySelector("#timer");
+const submitButton = document.querySelector("#submitbtn");
+const questionBox = document.querySelector("#question");
+
+timer.textContent = TIME_LEFT;
+const ONE_SECOND = 1000; //1000 ms  = 1s
+let expectedAnswer = 0;
+let playerScore = 0;
+let gameOver = false;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function startTimer() {
+    //remove event listener to prevent startTimer from being called again
+    timer.removeEventListener("click", startTimer);
+    while (TIME_LEFT > 0) {
+        await sleep(ONE_SECOND); //wait 1 second;
+        TIME_LEFT--;
+        timer.textContent = TIME_LEFT;
+
+    }
+    //re-add eventlistener
+    gameOver = true;
+    questionBox.textContent = "Game over ⛔ Restart game ☝";
+    TIME_LEFT = START_TIME;
+    timer.textContent = TIME_LEFT;
+    timer.addEventListener("click", startTimer);
+}
+
+function updatePlayerScore(correctAnswer) {
+    const scoreVal = document.querySelector("#score-value");
+    if(correctAnswer){
+        playerScore+=100;
+    }else{
+        playerScore-=200;
+    }
+    scoreVal.textContent = playerScore;
+}
+function getUserAnswer() {
+    const allCounters = abacusCounterContainer.querySelectorAll(".counter");
+    let userAnswer = "";
+    allCounters.forEach(c => {
+        userAnswer += c.textContent;
+    });
+    // console.log(userAnswer);
+    return parseInt(userAnswer);
+}
+function startGame() {
+    gameOver = false;
+    playerScore = 0;
+    generateQuestion();
+    startTimer();
+
+    submitButton.addEventListener("click", ()=>{
+        if(gameOver){
+            return;
+        }
+        if (TIME_LEFT > 0) {
+            if (getUserAnswer() == expectedAnswer) {
+                submitButton.classList.add("correct-answer");
+                updatePlayerScore(true);
+                generateQuestion();
+            } else {
+                submitButton.classList.add("wrong-answer");
+                updatePlayerScore(false);
+            }
+            submitButton.addEventListener("transitionend",()=>{
+                submitButton.classList.remove("correct-answer");
+                submitButton.classList.remove("wrong-answer");
+
+            },{once:true});
+        }
+    });
+}
+function generateQuestion() {
+    const maxAbacusValue  = 9999999999; //max value that can be displayed on abacus
+    const lowerBound = 100;
+    // const upperBound = maxAbacusValue - lowerBound;
+    const upperBound = 99999;
+
+    let n1 = parseInt(Math.random() * upperBound) + lowerBound;
+    let n2 = parseInt(Math.random() * upperBound) + lowerBound;
+    const operators = ["+", "-"];
+    let randomIndex = parseInt(Math.random()*operators.length);
+
+    questionBox.textContent = Math.max(n1,n2).toString() + operators[randomIndex] + Math.min(n1,n2).toString();
+    expectedAnswer = eval(questionBox.textContent);
+    console.log(expectedAnswer);
+}
+timer.addEventListener("click", startGame, {once:true});
