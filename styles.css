@@ -240,3 +240,15 @@ body {
     }
 
 }
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    div.container>* {
+        display: grid;
+        page-break-inside: avoid;
+    }
+}
