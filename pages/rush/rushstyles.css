@@ -6,16 +6,20 @@
     --BEAD-SIZE: 40px;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     height: 100%;
 }
 
 body {
-    background: #D3CCE3;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom, #E9E4F0, #D3CCE3);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to bottom, #E9E4F0, #D3CCE3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    margin-top:5px;
+    background: #D3CCE3;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #E9E4F0, #D3CCE3);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #E9E4F0, #D3CCE3);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    margin-top: 5px;
     padding: 0;
     display: flex;
     justify-content: center;
@@ -52,8 +56,10 @@ body {
 }
 
 #timer:hover {
-    background-color: rgb(141, 244, 141);
+    outline: 3px solid;
 }
+
+/* timer ends here   */
 
 #question {
     font-family: 'Source Sans Pro', sans-serif;
@@ -65,9 +71,10 @@ body {
     /* background-color: rgb(240, 240, 240); */
 }
 
-/* timer ends here   */
-
-#question, #submitbtn, #score, .counter{
+#question,
+#submitbtn,
+#score,
+.counter {
     font-size: 30px;
 }
 
@@ -100,18 +107,22 @@ body {
 }
 
 #submitbtn:hover {
-    outline: 5px solid;
+    outline: 3px solid;
+}
+
+.correct-answer,
+.wrong-answer {
+    transition: .5s;
 }
 
 .correct-answer {
     color: green;
-    transition: .2s;
 }
 
 .wrong-answer {
     color: red;
-    transition: .2s;
 }
+
 /* submit button ends here  */
 
 #score {
@@ -189,12 +200,45 @@ body {
     width: 100%;
 }
 
-@media screen and (max-width:800px) {
+@media screen and (max-width:600px) {
 
     :root {
         --BEAD-SIZE: 20px;
     }
 
+    #question,
+    #submitbtn,
+    #score,
+    .counter {
+        font-size: 20px;
+    }
+
+    .counter {
+        padding: 1px;
+    }
+
+    .column-container,
+    .counter-container {
+        justify-content: space-between;
+    }
+
+    .wrapper2 {
+        height: 40px;
+    }
+
+    #submitbtn,
+    #score {
+        border-radius: 5px;
+        padding: 5px;
+        width: auto;
+        height: auto;
+    }
+
+    #timer {
+        font-size: 15px;
+        width: 30px;
+        height: 30px;
+    }
 }
 
 @media print {
