@@ -26,7 +26,7 @@ const num2 = document.querySelector(".num2");
 
 //get paragraph where instructions will be entered.
 const instructionPara = document.querySelector("#instruction");
-const DEFAULT_INSTRUCTION = "Fill num1 and num2, where num1 ≥ num2, then press Enter key.";
+const DEFAULT_SUBTRACTION_INSTRUCTION = "Fill num1 and num2, where num1 ≥ num2, then press Enter key.";
 //get paragraph where integer overflow/underflow warning will be entered.
 const warningPara = document.querySelector("#warning");
 let overflowedColumnsCount = 0; //number of columns in abacus currently overflowing
@@ -340,19 +340,19 @@ function calculateFinalAnswer() {
     while (finalAnswer.length < numberOfColumns) {
         finalAnswer = "0" + finalAnswer;
     }
-    console.log("Final answer is ", finalAnswer);
+    // console.log("Final answer is ", finalAnswer);
 
     //if overflow will occur
     if (finalAnswer.length != numberOfColumns) {
         finalAnswer = finalAnswer.slice(1); //remove first char to make finalAnswer of size numberOfColumns
         AdditionOverflow = true;
     }
-    console.log("Final answer is ", finalAnswer);
+    // console.log("Final answer is ", finalAnswer);
 }
 function EnableComputerAssistance(event) {
     if (event.code == "Enter") {//enter key pressed
 
-        console.log("num1>=num2:", num1Greaternum2());
+        // console.log("num1>=num2:", num1Greaternum2());
 
         //check if all user input is valid
         let allCells = cellContainer.querySelectorAll(".cell");
@@ -362,7 +362,7 @@ function EnableComputerAssistance(event) {
         //for subtraction, check if num1>= num2
         if (!performAddition) {
             if (!num1Greaternum2()) {
-                instructionPara.textContent = " Obey 👉 num1 ≥ num2";
+                instructionPara.textContent = "Obey 👉 num1 ≥ num2";
                 return;
             }
         }
@@ -374,9 +374,7 @@ function EnableComputerAssistance(event) {
         calculateFinalAnswer();
 
         //prevent change of operation
-        checkbox.removeEventListener("click",()=>{
-            performAddition = checkbox.checked;
-        });
+        checkbox.removeEventListener("click",showDefaultInstruction);
 
         //ignore other keydown events
         document.removeEventListener("keydown", EnableComputerAssistance);
@@ -495,9 +493,7 @@ async function AnimateAutoFillAbacus() {
     document.addEventListener("keydown", EnableComputerAssistance);
 
     //allow change of operation
-    checkbox.addEventListener("click",()=>{
-        performAddition = checkbox.checked;
-    });
+    checkbox.addEventListener("click",showDefaultInstruction);
 
     // show first instruction
     showNextInstruction();
@@ -524,16 +520,26 @@ function fillNumGrid(num1, num2) {
         num2Cells[i].value = num2[i];
     }
 }
+
+
+// fillNumGrid("00015","00006");
+// fillNumGrid("01002", "00009");
+
+//let user choose an operator 
+let checkbox = document.querySelector("#operation");
+function showDefaultInstruction(){
+    performAddition = checkbox.checked;
+    if(performAddition){
+        instructionPara.textContent = "Fill num1 and num2 then press Enter key.";
+    }else{
+        instructionPara.textContent = DEFAULT_SUBTRACTION_INSTRUCTION;
+    }
+}
+checkbox.addEventListener("click",showDefaultInstruction);
+
 //if performing subtraction, num1>=2 num2
 if (!performAddition) {
-    instructionPara.textContent = DEFAULT_INSTRUCTION;
+    instructionPara.textContent = DEFAULT_SUBTRACTION_INSTRUCTION;
 }
-// fillNumGrid("00015","00006");
-fillNumGrid("01002", "00009");
 
-let checkbox = document.querySelector("#operation");
-checkbox.addEventListener("click",()=>{
-    performAddition = checkbox.checked;
-    console.log(performAddition);
-});
 document.addEventListener("keydown", EnableComputerAssistance);
