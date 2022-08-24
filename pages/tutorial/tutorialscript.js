@@ -33,7 +33,7 @@ let overflowedColumnsCount = 0; //number of columns in abacus currently overflow
 let columnUnderflowCount = 0; //number of columns in abacus currently underflowing
 const OVERFLOW_MESSAGE = "⚠ Add 1 bead to the current column's left neighbour, reset current counter to 0, then keep counting.";
 const UNDERFLOW_MESSAGE = "⚠ Subtract 1 bead from current column's nearest non-zero left neighbour, reset current counter to 10, then keep counting.";
-const TRANSITION_DURATION = 0; //default 1000
+const TRANSITION_DURATION = 1000; //default 1000
 
 //user-input// numGrid variables
 let numGridPtr = numberOfColumns; //points to current column where addition must take place
