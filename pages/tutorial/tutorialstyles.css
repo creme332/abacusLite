@@ -51,7 +51,6 @@ body {
     position: absolute;
     width: 7px;
     border-radius: 5px;
-    ;
     /* outline:1px solid blue; */
     background-color: rgb(132, 132, 132);
     box-shadow: inset -3px 1px 1px rgba(0, 0, 0, .5);
@@ -83,6 +82,7 @@ body {
     justify-content: flex-end;
     align-items: center;
 }
+
 /* Abacus ends here */
 
 .assist-container {
@@ -217,12 +217,6 @@ textarea:focus {
     height: 4em;
     overflow: hidden;
     border-bottom: 0.5em solid #eee;
-}
-
-.rocker-small {
-    font-size: 0.75em;
-    /* Sizes the switch */
-    margin: 1em;
 }
 
 .rocker::before {
