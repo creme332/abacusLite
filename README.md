@@ -6,14 +6,11 @@
 
 An interactive abacus to help you master the abacus.
 
-![GIF of the abacus website](gifs/gif1.gif)
+![homepage](assets/img/2022-08-22-16-12-22.png)
 
-[▶ Live Preview]()
+[▶ Live Preview](https://creme332.github.io/abacus-basics/)
 
 # 🚀Features
-
-- Responsive website.
-- Simple UI.
 
 ## Tutorial mode 
 Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations (addition and subtraction).
@@ -23,10 +20,11 @@ Enter two numbers and the computer will walk you through how to use an abacus fo
 - Integer overflow detection.
 - Step-by-step explanation.
 
-## Test mode 🏃‍♀️💨
+![video of tutorial](assets/img/tutorial-video.mp4)
+## Rush mode 🏃‍♀️💨
 Use the abacus to evaluate given expressions before timer runs out.
-- No computer assistance.
-- Timer
+
+![rush mode screenshot](assets/img/2022-08-24-17-20-23.png)
 
 ## Zen mode 🤪 
 Use the classic abacus.
@@ -35,6 +33,7 @@ Use the classic abacus.
 - No animations.
 - Background music. (optional)
 
+![zen mode screenshot](assets/img/2022-08-22-16-14-37.png)
 # 📌 Attributions
 Resource | Source
 ---|---
@@ -42,18 +41,16 @@ All images in `assets/img` | pngtree
 Background music in zen mode | black coffee by elijah who
 Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
 3D image on homepage | SALY 3D-Illustration-Pack from Figma
-# 🕓 History
-![homepage](assets/img/2022-08-22-16-12-22.png)
-![tutorial mode](assets/img/2022-08-22-16-13-51.png)
-![zen mode](assets/img/2022-08-22-16-14-37.png)
+
 # 🔨 To-Do
 - [ ] Add sitemap.
 - [ ] Add a diagram showing skeleton and class names.
-- [ ] Implement rush mode.
 - [ ] Identify and remove unused css.
 
 
 ### ✔ Done
+- [x] Implement rush mode.
+- [x] Group css properties
 - [x] Add sound effects to zen mode.
 - [x] Make website print-friendly.
 - [x] Fix merging beads glitch in zen mode.
