@@ -154,8 +154,8 @@ beads.forEach(bead => {
     bead.addEventListener("click", displaceBead);
 });
 
-const START_TIME = 5; //in seconds
-let TIME_LEFT = START_TIME; 
+const START_TIME = 120; //in seconds
+let TIME_LEFT = START_TIME;
 const timer = document.querySelector("#timer");
 const submitButton = document.querySelector("#submitbtn");
 const questionBox = document.querySelector("#question");
@@ -188,10 +188,10 @@ async function startTimer() {
 }
 
 function updatePlayerScore(correctAnswer) {
-    if(correctAnswer){
-        playerScore+=100;
-    }else{
-        playerScore-=200;
+    if (correctAnswer) {
+        playerScore += 100;
+    } else {
+        playerScore -= 200;
     }
     scoreVal.textContent = playerScore;
 }
@@ -212,8 +212,8 @@ function startGame() {
     generateQuestion();
     startTimer();
 
-    submitButton.addEventListener("click", ()=>{
-        if(gameOver){
+    submitButton.addEventListener("click", () => {
+        if (gameOver) {
             return;
         }
         if (TIME_LEFT > 0) {
@@ -225,16 +225,16 @@ function startGame() {
                 submitButton.classList.add("wrong-answer");
                 updatePlayerScore(false);
             }
-            submitButton.addEventListener("transitionend",()=>{
+            submitButton.addEventListener("transitionend", () => {
                 submitButton.classList.remove("correct-answer");
                 submitButton.classList.remove("wrong-answer");
 
-            },{once:true});
+            }, { once: true });
         }
     });
 }
 function generateQuestion() {
-    const maxAbacusValue  = 9999999999; //max value that can be displayed on abacus
+    const maxAbacusValue = 9999999999; //max value that can be displayed on abacus
     const lowerBound = 100;
     // const upperBound = maxAbacusValue - lowerBound;
     const upperBound = 99999;
@@ -242,10 +242,10 @@ function generateQuestion() {
     let n1 = parseInt(Math.random() * upperBound) + lowerBound;
     let n2 = parseInt(Math.random() * upperBound) + lowerBound;
     const operators = ["+", "-"];
-    let randomIndex = parseInt(Math.random()*operators.length);
+    let randomIndex = parseInt(Math.random() * operators.length);
 
-    questionBox.textContent = Math.max(n1,n2).toString() + operators[randomIndex] + Math.min(n1,n2).toString();
+    questionBox.textContent = Math.max(n1, n2).toString() + operators[randomIndex] + Math.min(n1, n2).toString();
     expectedAnswer = eval(questionBox.textContent);
-    console.log(expectedAnswer);
+    // console.log(expectedAnswer);
 }
 timer.addEventListener("click", startGame);
