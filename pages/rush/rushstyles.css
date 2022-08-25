@@ -14,11 +14,9 @@ body {
 
 body {
     background: #D3CCE3;
-    /* fallback for old browsers */
     background: -webkit-linear-gradient(to bottom, #E9E4F0, #D3CCE3);
-    /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to bottom, #E9E4F0, #D3CCE3);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
     margin-top: 5px;
     padding: 0;
     display: flex;
@@ -47,7 +45,6 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    /* background-color: rgb(211, 211, 211); */
     font-family: 'IBM Plex Sans Hebrew', sans-serif;
     display: flex;
     justify-content: center;
@@ -68,7 +65,6 @@ body {
     padding: 5px;
     height: auto;
     outline: 1px solid;
-    /* background-color: rgb(240, 240, 240); */
 }
 
 #question,
@@ -142,7 +138,6 @@ body {
     height: 15px;
     border-radius: 10px;
     background-color: rgb(200, 152, 89);
-    /* box-shadow: 0px 5px 3px rgb(99, 74, 42); */
 }
 
 .stick {

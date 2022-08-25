@@ -11,8 +11,6 @@ body {
     padding: 0;
     color: white;
     font-family: 'Nunito', sans-serif;
-    /* background-color: red; */
-
     display: flex;
     flex-direction: column;
 }
@@ -109,8 +107,6 @@ body {
 .main-content {
     display: flex;
     flex-direction: column;
-    /* flex-grow: 1; */
-    /* height: 100%; */
     /* outline:10px solid green; */
     background-color: white;
 }
@@ -155,12 +151,9 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 18px;
     text-align: center;
-    /* width: 100%; */
-
     padding: 10px;
     padding-left: 30px;
     background-color: rgb(225, 225, 225);
-
     flex-grow: 1;
 
 }
@@ -215,7 +208,6 @@ body {
         flex-direction: column;
         padding-left: 10px;
         align-items: center;
-        /* justify-content: center; */
     }
 
     svg {
