@@ -4,14 +4,17 @@
 ![JavaScript shield](https://img.shields.io/badge/-JavaScript-yellow)
 ![CSS shield](https://img.shields.io/badge/-CSS-orange)
 
-abacusLite is an interactive abacus learning portal designed to help you master the abacus. On top of being free, abacusLite is supported on all devices.
+abacusLite is an interactive abacus learning portal designed to help you master the abacus.
 
 ![homepage screenshot](assets/img/2022-08-22-16-12-22.png)
 
 [▶ Live Preview](https://creme332.github.io/abacusLite/)
 
 # 🚀Features
+- Mobile-responsive design
+- 3 different game modes
 
+# ✨Modes
 ## Tutorial mode ⛑
 Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations. Currently explanations are available only for addition and subtraction.
 
@@ -49,10 +52,4 @@ Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
 - [ ] Add multiplication and division to tutorial.
 - [ ] Improve explanation when oveflow/underflow occurs. 
 - [ ] Add option to vary difficulty in Rush mode.
-
-### ✔ Done
-- [x] Identify and remove unused css.
-- [x] Implement rush mode.
-- [x] Make website print-friendly.
-- [x] Make website responsive.
-- [x] Add project social media preview.
+- [ ] Optimize assets
