@@ -10,12 +10,12 @@ abacusLite is an interactive abacus learning portal designed to help you master 
 
 [▶ Live Preview](https://creme332.github.io/abacusLite/)
 
-# 🚀Features
+## 🚀Features
 - Mobile-responsive design
 - 3 different game modes
 
-# ✨Modes
-## Tutorial mode ⛑
+## ✨Modes
+### Tutorial mode ⛑
 Enter two numbers and the computer will walk you through how to use an abacus for basic arithmetic operations. Currently explanations are available only for addition and subtraction.
 
 - Input validation.
@@ -25,12 +25,12 @@ Enter two numbers and the computer will walk you through how to use an abacus fo
 
 ![video of abacus performing addition and subtraction](assets/img/tutorial-video.gif)
 
-## Rush mode 🏃‍♀️💨
+### Rush mode 🏃‍♀️💨
 Use the abacus to evaluate math expressions as fast as possible.
 
 ![rush mode screenshot](assets/img/2022-08-24-17-20-23.png)
 
-## Zen mode 🤪 
+### Zen mode 🤪 
 Use the classic abacus.
 
 - No computer assistance.
@@ -39,7 +39,7 @@ Use the classic abacus.
 - Can be used for addition, subtraction, multiplication, and division.
 
 ![zen mode screenshot](assets/img/2022-08-22-16-14-37.png)
-# 📌 Attributions
+## 📌 Attributions
 Resource | Source
 ---|---
 All images in `assets/img` | pngtree
@@ -47,7 +47,7 @@ Background music in zen mode | black coffee by elijah who
 Checkbox toggle switch | https://codepen.io/marcusconnor/pen/QJNvMa
 3D image on homepage | SALY 3D-Illustration-Pack from Figma
 
-# 🔨 To-Do
+## 🔨 To-Do
 - [ ] Add sitemap.
 - [ ] Add multiplication and division to tutorial.
 - [ ] Improve explanation when oveflow/underflow occurs. 
